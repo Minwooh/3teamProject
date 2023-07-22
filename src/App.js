@@ -1,24 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import styled from "styled-components";
+import Agreement from "./pages/semin/agreement";
+import Join from "./pages/semin/join";
+import Login from "./pages/semin/login";
+import Start from "./pages/semin/start";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <BrowserRouter>
+      <div
+        style={{
+          maxWidth: "1280px",
+          margin: "0px auto",
+          minHeight: "100vh",
+          position: "relative",
+        }}
+      >
+        <styled />
+        <Routes>
+          <Route path="/" element={<Agreement />} />
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/start" element={<Start />} />
+        </Routes>
+      </div>
+    </BrowserRouter>
   );
 }
 
