@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import Write from "./write";
 
 const Container = styled.div`
   width: 414px;
@@ -200,22 +200,11 @@ const ButtonWrite = styled.button`
 `;
 
 const FindPage = () => {
-  // const [title, setTitle] = useState("");
-  // const [content, setContent] = useState("");
-  // const [price, setPrice] = useState("");
-  const [ITEMS, setITEMS] = useState([]);
+  const [items, setItems] = useState([]);
 
-  useEffect(() => {
-    const savedItems = localStorage.getItem("ITEMS");
-
-    if (savedItems) {
-      setITEMS(JSON.parse(savedItems));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("ITEMS", JSON.stringify(ITEMS));
-  }, [ITEMS]);
+  const handleSaveItem = (newItem) => {
+    setItems([...items, newItem]);
+  };
 
   const navigate = useNavigate();
 
@@ -227,25 +216,31 @@ const FindPage = () => {
     navigate("/myPage");
   };
 
+  const Logout = () => {
+    navigate("/home");
+  };
+
   const Top = () => {
     return (
       <TopBox>
-        <Button>로그아웃</Button>
+        <Button onClick={Logout}>로그아웃</Button>
         <Button onClick={GoMy}>마이페이지</Button>
       </TopBox>
     );
   };
 
   const ListContent = ({ item }) => {
+    const { title, content, price } = item;
+
     return (
       <WhiteBox>
-        <LookImg src="./img/basic.png"></LookImg>
-        <Title>{item.title}</Title>
-        <Preview>{item.content}</Preview>
+        <LookImg src="./images2/basic.png"></LookImg>
+        <Title>{title}</Title>
+        <Preview>{content}</Preview>
         <SeedImg>
-          <img src="./img/seed.png" alt="시드" />
+          <img src="./images2/seed.png" alt="시드" />
         </SeedImg>
-        <ClickCount>{item.price}</ClickCount>
+        <ClickCount>{price}</ClickCount>
       </WhiteBox>
     );
   };
@@ -254,7 +249,7 @@ const FindPage = () => {
     <Container>
       <Top />
       <TitleBox>
-        <img src="/img/title.png" alt="있농" />
+        <img src="/images2/title.png" alt="있농" />
         <Line></Line>
       </TitleBox>
 
@@ -300,18 +295,13 @@ const FindPage = () => {
         ></div>
       </ConditionBox>
       <ListBox>
-        {ITEMS.map((item) => (
-          <ListContent key={item.id} item={item} />
+        <Write onSave={handleSaveItem} />
+        {items.map((item, index) => (
+          <ListContent key={index} item={item} />
         ))}
       </ListBox>
 
-      <ButtonWrite
-        onClick={() => {
-          GoWrite();
-        }}
-      >
-        글쓰기
-      </ButtonWrite>
+      <ButtonWrite onClick={GoWrite}>글쓰기</ButtonWrite>
     </Container>
   );
 };

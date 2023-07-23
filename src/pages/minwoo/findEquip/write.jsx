@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 // import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -208,25 +208,12 @@ const Button2 = styled.button`
   line-height: normal;
 `;
 
-const Write = () => {
+const Write = ({ onSave }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [price, setPrice] = useState("");
-  const [ITEMS, setITEMS] = useState([]);
+  const [price, setPrice] = useState(0);
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  useEffect(() => {
-    const savedItems = localStorage.getItem("ITEMS");
-
-    if (savedItems) {
-      setITEMS(JSON.parse(savedItems));
-    }
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem("ITEMS", JSON.stringify(ITEMS));
-  }, [ITEMS]);
 
   const navigate = useNavigate();
 
@@ -238,34 +225,45 @@ const Write = () => {
     navigate("/myPage");
   };
 
+  const Logout = () => {
+    navigate("/home");
+  };
+
   const Top = () => {
     return (
       <TopBox>
-        <Button>로그아웃</Button>
+        <Button onClick={Logout}>로그아웃</Button>
         <Button onClick={GoMy}>마이페이지</Button>
       </TopBox>
     );
   };
 
-  const handleSave = () => {
+  const handleSave = (e) => {
     // 저장 버튼이 클릭되었을 때 실행되는 로직
     // 서버에 데이터를 전송하여 저장하는 코드를 여기에 작성합니다.
     console.log("제목:", title);
     console.log("내용:", content);
     console.log("가격:", price);
 
-    const newItem = {
-      id: ITEMS.length,
-      title: title,
-      content: content,
-      price: price,
-    };
+    //const { onSave } = props;
+    //setItems([...items, newItem]);
 
-    setITEMS([...ITEMS, newItem]);
-    //props로 넘기기
-    localStorage.setItem("ITEMS", JSON.stringify([...ITEMS, newItem]));
-    console.log("저장!!");
-    GoFind();
+    const newItem = { title, content, price };
+    console.log(newItem);
+
+    if (typeof onSave === "function") {
+      onSave(newItem);
+    }
+    //onSave가 넘어가지 않음
+    // const { onSave } = newItem;
+    // console.log(onSave);
+    //onSave();
+
+    setTitle("");
+    setContent("");
+    setPrice("");
+    //setImage('');
+    //GoFind();
   };
 
   const handleMouseEnter = () => {
@@ -280,7 +278,7 @@ const Write = () => {
     <Container>
       <Top />
       <TitleBox>
-        <img src="/img/title.png" alt="있농" />
+        <img src="/images2/title.png" alt="있농" />
         <Line></Line>
       </TitleBox>
 
@@ -303,11 +301,11 @@ const Write = () => {
           ></InputContent>
         </TextBox>
         <AddBox onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          <img src="/img/img.png" alt="사진첨부" />
+          <img src="/images2/img.png" alt="사진첨부" />
           {isDropdownOpen && (
             <DropdownMenu>
               <DropdownItem>
-                <img src="/img/link.png" alt="링크첨부" />
+                <img src="/images2/link.png" alt="링크첨부" />
               </DropdownItem>
               {/* <DropdownItem></DropdownItem> */}
             </DropdownMenu>
@@ -322,14 +320,7 @@ const Write = () => {
         </PriceBox>
       </ContentBox>
 
-      <Button2
-        onClick={() => {
-          handleSave();
-          //GoFind();
-        }}
-      >
-        등록하기
-      </Button2>
+      <Button2 onClick={handleSave}>등록하기</Button2>
     </Container>
   );
 };
