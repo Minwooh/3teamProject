@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom/dist";
 
 const Container = styled.div`
   width: 414px;
@@ -30,9 +31,15 @@ const Button = styled.button`
 `;
 
 const Top = () => {
+  const navigate = useNavigate();
+
+  const Logout = () => {
+    navigate("/home");
+  };
+
   return (
     <TopBox>
-      <Button>로그아웃</Button>
+      <Button onClick={Logout}>로그아웃</Button>
       <Button>마이페이지</Button>
     </TopBox>
   );
@@ -166,7 +173,7 @@ const ListBox = styled.div`
   padding-top: 10px;
 
   margin-left: 2px;
-  margin-top: 10px;
+  margin-top: 5px;
 `;
 
 const WhiteBox = styled.div`
@@ -243,13 +250,13 @@ const ListContent = () => {
   return (
     <WhiteBox>
       <HeartImg>
-        <img src="./img/heart.png" style={{ height: "10px" }} />
+        <img src="./images2/heart.png" style={{ height: "10px" }} />
       </HeartImg>
-      <LookImg src="./img/basic.png"></LookImg>
+      <LookImg src="./images2/basic.png"></LookImg>
       <Title>제목</Title>
       <Preview>글 미리보기</Preview>
       <SeedImg>
-        <img src="./img/seed.png" />
+        <img src="./images2/seed.png" />
       </SeedImg>
       <ClickCount>4300</ClickCount>
     </WhiteBox>
@@ -258,14 +265,6 @@ const ListContent = () => {
 
 const DisplayItems = () => {
   const [items, setItems] = useState([]);
-
-  useEffect(() => {
-    // localStorage에서 ITEMS 배열 가져오기
-    const savedItems = localStorage.getItem("ITEMS");
-    if (savedItems) {
-      setItems(JSON.parse(savedItems));
-    }
-  }, []);
 
   return (
     <div>
@@ -309,7 +308,7 @@ const Page = () => {
     <Container>
       <Top />
       <TitleBox>
-        <img src="/img/title.png" />
+        <img src="/images2/title.png" />
       </TitleBox>
 
       <SmallTitle>
@@ -322,7 +321,7 @@ const Page = () => {
 
       <MiddleBox>
         <MiddleTitle>
-          <img src="/img/pen.png" alt="펜" style={{ width: "15px" }} />
+          <img src="/images2/pen.png" alt="펜" style={{ width: "15px" }} />
           작성한 글
         </MiddleTitle>
         <MiddleContent>
@@ -338,7 +337,7 @@ const Page = () => {
 
       <LikeBox>
         <ListText>
-          <img src="/img/heart.png" alt="하트" style={{ width: "18px" }} />
+          <img src="/images2/heart.png" alt="하트" style={{ width: "18px" }} />
           관심목록
         </ListText>
         <ListBox>
