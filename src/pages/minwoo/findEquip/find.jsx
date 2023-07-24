@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Write from "./write";
+import Dropdown from "./Dropdown";
 
 const Container = styled.div`
   width: 414px;
@@ -68,7 +68,6 @@ const MiddleTitle = styled.div`
   line-height: normal;
 `;
 const MiddleCondition = styled.div`
-  background-color: #006666;
   margin-top: 8px;
   margin-bottom: 6px;
 `;
@@ -82,6 +81,22 @@ const SetMin = styled.input`
   margin-right: 10px;
   border: none;
   background: #efefef;
+
+  color: #717171;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &::placeholder {
+    color: #717171;
+    font-family: Inter;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 `;
 const SetMax = styled.input`
   width: 125px;
@@ -90,6 +105,22 @@ const SetMax = styled.input`
   margin-left: 10px;
   border: none;
   background: #efefef;
+
+  color: #717171;
+  font-family: Inter;
+  font-size: 12px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+
+  &::placeholder {
+    color: #717171;
+    font-family: Inter;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 `;
 const BtnLooking = styled.button`
   width: 88px;
@@ -166,20 +197,6 @@ const ClickCount = styled.div`
   margin-top: -24px;
 `;
 
-// const ListContent = ({ item }) => {
-//   return (
-//     <WhiteBox>
-//       <LookImg src="./img/basic.png"></LookImg>
-//       <Title>제목</Title>
-//       <Preview>글 미리보기</Preview>
-//       <SeedImg>
-//         <img src="./img/seed.png" />
-//       </SeedImg>
-//       <ClickCount>4300</ClickCount>
-//     </WhiteBox>
-//   );
-// };
-
 const ButtonWrite = styled.button`
   width: 77px;
   height: 29px;
@@ -199,14 +216,16 @@ const ButtonWrite = styled.button`
   line-height: normal;
 `;
 
-const FindPage = () => {
-  const [items, setItems] = useState([]);
-
-  const handleSaveItem = (newItem) => {
-    setItems([...items, newItem]);
-  };
-
+const FindPage = ({ items, setItems }) => {
   const navigate = useNavigate();
+
+  // 초기 로딩 시점에 localStorage에서 items 읽어오기
+  useEffect(() => {
+    const savedItems = localStorage.getItem("ITEMS");
+    if (savedItems) {
+      setItems(JSON.parse(savedItems));
+    }
+  }, [setItems]);
 
   const GoWrite = () => {
     navigate("/");
@@ -230,17 +249,15 @@ const FindPage = () => {
   };
 
   const ListContent = ({ item }) => {
-    const { title, content, price } = item;
-
     return (
-      <WhiteBox>
+      <WhiteBox key={item.id}>
         <LookImg src="./images2/basic.png"></LookImg>
-        <Title>{title}</Title>
-        <Preview>{content}</Preview>
+        <Title>{item.title}</Title>
+        <Preview>{item.content}</Preview>
         <SeedImg>
           <img src="./images2/seed.png" alt="시드" />
         </SeedImg>
-        <ClickCount>{price}</ClickCount>
+        <ClickCount>{item.price}</ClickCount>
       </WhiteBox>
     );
   };
@@ -256,7 +273,21 @@ const FindPage = () => {
       <MiddleBox>
         <White>
           <MiddleTitle>농기구검색</MiddleTitle>
-          <MiddleCondition>지역</MiddleCondition>
+          <MiddleCondition>
+            지역
+            <select
+              name="choice"
+              style={{ marginLeft: "10px", width: "60px", height: "20px" }}
+            >
+              <option value="new">시/도</option>
+            </select>
+            <select
+              name="choice"
+              style={{ marginLeft: "10px", width: "60px", height: "20px" }}
+            >
+              <option value="new">시/도</option>
+            </select>
+          </MiddleCondition>
           가격설정
           <MiddleSetLine>
             <SetMin placeholder="최소금액"></SetMin>~
@@ -266,38 +297,17 @@ const FindPage = () => {
         </White>
       </MiddleBox>
       <ConditionBox>
-        <div
-          style={{
-            position: "relative",
-            marginTop: "4px",
-            width: "125px",
-            height: "24px",
-
-            color: "#000",
-            fontFamily: "Inter",
-            fontSize: "14px",
-            fontStyle: "normal",
-            fontWeight: 600,
-            lineHeight: "normal",
-          }}
-        >
-          정렬 조건
-        </div>
-        <div
-          style={{
-            position: "relative",
-            marginTop: "-26px",
-            marginLeft: "70px",
-            width: "125px",
-            height: "24px",
-            background: "rgba(34, 90, 0, 0.18)",
-          }}
-        ></div>
+        {" "}
+        정렬조건
+        <select name="choice" style={{ marginLeft: "10px", width: "110px" }}>
+          <option value="new">최신 등록순</option>
+          <option value="name">이름순</option>
+          <option value="old">오래된순</option>
+        </select>
       </ConditionBox>
       <ListBox>
-        <Write onSave={handleSaveItem} />
-        {items.map((item, index) => (
-          <ListContent key={index} item={item} />
+        {items.map((item) => (
+          <ListContent key={item.id} item={item} />
         ))}
       </ListBox>
 

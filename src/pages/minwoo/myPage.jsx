@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom/dist";
 
 const Container = styled.div`
@@ -199,9 +199,15 @@ const LookImg = styled.img`
 `;
 const Title = styled.div`
   display: inlin-box;
+  margin-top: -18px;
+  margin-left: 20px;
+`;
+const ListTitle = styled.div`
+  display: inlin-box;
   margin-top: -50px;
   margin-left: 80px;
 `;
+
 const Preview = styled.div`
   position: relative;
   height: 20px;
@@ -219,10 +225,12 @@ const ClickCount = styled.div`
 
 const NongArea = styled.div`
   background-color: #00ff22;
+
   width: 330px;
   height: 60px;
 
   margin-left: 3px;
+  margin-top: 55px;
 
   color: #0c0c0c;
   font-family: Inter;
@@ -246,64 +254,80 @@ const LandArea = styled.div`
   line-height: normal;
 `;
 
-const ListContent = () => {
-  return (
-    <WhiteBox>
-      <HeartImg>
-        <img src="./images2/heart.png" style={{ height: "10px" }} />
-      </HeartImg>
-      <LookImg src="./images2/basic.png"></LookImg>
-      <Title>제목</Title>
-      <Preview>글 미리보기</Preview>
-      <SeedImg>
-        <img src="./images2/seed.png" />
-      </SeedImg>
-      <ClickCount>4300</ClickCount>
-    </WhiteBox>
-  );
-};
+// const ListContent = ({ item }) => {
+//   return (
+//     <WhiteBox>
+//       <HeartImg>
+//         <img src="./images2/heart.png" style={{ height: "10px" }} />
+//       </HeartImg>
+//       <LookImg src="./images2/basic.png"></LookImg>
+//       <Title>{item.title}</Title>
+//       <Preview>{item.content}</Preview>
+//       <SeedImg>
+//         <img src="./images2/seed.png" />
+//       </SeedImg>
+//       <ClickCount>4300</ClickCount>
+//     </WhiteBox>
+//   );
+// };
 
-const DisplayItems = () => {
-  const [items, setItems] = useState([]);
+// const DisplayItems = ({ item }) => {
+//   return (
+//     <WhiteBox>
+//       <HeartImg>
+//         <img src="./images2/heart.png" style={{ height: "10px" }} />
+//       </HeartImg>
+//       <LookImg src="./images2/basic.png"></LookImg>
+//       <Title>{item.title}</Title>
+//       <Preview>{item.content}</Preview>
+//       <SeedImg>
+//         <img src="./images2/seed.png" />
+//       </SeedImg>
+//       <ClickCount>4300</ClickCount>
+//     </WhiteBox>
+//   );
+// };
 
-  return (
-    <div>
-      {items.map((item) => (
-        <div key={item.id}>
-          <p
-            style={{
-              display: "inline-block",
-              marginRight: "5px",
-              color: "#0C0C0C",
-              fontFamily: "Inter",
-              fontSize: "13px",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "normal",
-            }}
-          >
-            {item.id++}.
-          </p>
-          <h2
-            style={{
-              display: "inline-block",
-              color: "#0C0C0C",
-              fontFamily: "Inter",
-              fontSize: "13px",
-              fontStyle: "normal",
-              fontWeight: 400,
-              lineHeight: "normal",
-            }}
-          >
-            {item.title}
-          </h2>
-        </div>
-      ))}
-    </div>
-  );
-};
+const Page = ({ items, setItems }) => {
+  useEffect(() => {
+    const savedItems = localStorage.getItem("ITEMS");
+    if (savedItems) {
+      setItems(JSON.parse(savedItems));
+    }
+  }, [setItems]);
 
-const Page = () => {
+  const DisplayItems = ({ item }) => {
+    return (
+      <div
+        style={{
+          marginTop: "-48px",
+          marginLeft: "0px",
+          width: "260px",
+          height: "18px",
+        }}
+      >
+        {item.id++}.<Title>{item.title}</Title>
+      </div>
+    );
+  };
+
+  const ListContent = ({ item }) => {
+    return (
+      <WhiteBox>
+        <HeartImg>
+          <img src="./images2/heart.png" style={{ height: "10px" }} />
+        </HeartImg>
+        <LookImg src="./images2/basic.png"></LookImg>
+        <ListTitle>{item.title}</ListTitle>
+        <Preview>{item.content}</Preview>
+        <SeedImg>
+          <img src="./images2/seed.png" />
+        </SeedImg>
+        <ClickCount>4300</ClickCount>
+      </WhiteBox>
+    );
+  };
+
   return (
     <Container>
       <Top />
@@ -328,7 +352,9 @@ const Page = () => {
           {/* 농기구랑 토지 페이지에서 받은 데이터 구분 필요!! 배열 이름 다르게 하기 */}
           농기구
           <NongArea>
-            <DisplayItems />
+            {items.map((item) => (
+              <DisplayItems key={item.id} item={item} />
+            ))}
           </NongArea>
           토지
           <LandArea></LandArea>
@@ -341,9 +367,9 @@ const Page = () => {
           관심목록
         </ListText>
         <ListBox>
-          <ListContent />
-          <ListContent />
-          <ListContent />
+          {items.map((item) => (
+            <ListContent key={item.id} item={item} />
+          ))}
         </ListBox>
       </LikeBox>
     </Container>
