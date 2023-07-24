@@ -10,6 +10,7 @@ import Agreement from "./pages/semin/agreement";
 import Join from "./pages/semin/join";
 import Login from "./pages/semin/login";
 import Start from "./pages/semin/start";
+import AfterLogin from "./pages/semin/afterlogin";
 
 const App = () => {
   return (
@@ -24,17 +25,18 @@ const App = () => {
       >
         <Styled />
         <Routes>
-          {/* 사용할 때 아래의 경로들 잠깐 주석처리하고 쓰기  */}
-          <Route path="/" element={<WritePage />} />
+          {/*민우쓰가 적은 경로*/}
+          {/*<Route path="/" element={<WritePage />} />
           <Route path="/find" element={<FindPage />} />
           <Route path="/myPage" element={<MyPage />} />
-          <Route path="/home" element={<Start />} />
+      <Route path="/home" element={<Start />} />*/}
 
           {/*세민쓰가 적은 경로*/}
-          {/* <Route path="/" element={<Agreement />} />
-                 <Route path="/join" element={<Join />} />
-                 <Route path="/login" element={<Login />} />
-                 <Route path="/start" element={<Start />} /> */}
+          <Route path="/agreement" element={<Agreement />} />
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Start />} />
+          <Route path="/afterlogin" element={<AfterLogin />} />
         </Routes>
       </div>
     </BrowserRouter>

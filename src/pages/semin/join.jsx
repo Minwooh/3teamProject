@@ -210,6 +210,7 @@ const ReLoginButton = styled.span`
   top: 50px;
 `;
 
+// 팝업 구현
 const Popup = ({ onClose }) => {
   const navigate = useNavigate();
   const gotoReLogin = () => {
@@ -232,7 +233,7 @@ const Popup = ({ onClose }) => {
         완료되었습니다
         <ReLoginButton onClick={gotoReLogin}>
           <img
-            src={`${process.env.PUBLIC_URL}/images/reloginbtn.png`}
+            src={`${process.env.PUBLIC_URL}/images1/reloginbtn.png`}
             alt="reloginbtn"
             width="180px"
           />
@@ -242,6 +243,7 @@ const Popup = ({ onClose }) => {
   );
 };
 
+// join 구현
 const Join = () => {
   const [showPopup, setShowPopup] = useState(false);
 
@@ -304,7 +306,7 @@ const Join = () => {
     <Container>
       <Logo>
         <img
-          src={`${process.env.PUBLIC_URL}/images/logo.png`}
+          src={`${process.env.PUBLIC_URL}/images1/logo.png`}
           alt="logo"
           width="250px"
         />
@@ -345,7 +347,7 @@ const Join = () => {
         </SmallGraybox>
         <Joinbtn onClick={handleJoinBtnClick}>
           <img
-            src={`${process.env.PUBLIC_URL}/images/joinbtn.png`}
+            src={`${process.env.PUBLIC_URL}/images1/joinbtn.png`}
             alt="joinbtn"
             width="110px"
           />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -130,13 +130,110 @@ const Down = styled.div`
   margin-top: -5px;
 `;
 
-const Start = () => {
+const ModalOverlay = styled.div`
+  position: fixed;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 358px;
+  height: 219px;
+  flex-shrink: 0;
+
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0px 0px 7px 2px rgba(0, 0, 0, 0.25);
+
+  z-index: 2;
+`;
+
+const ModalContent = styled.div`
+  color: #000;
+  font-family: Inter;
+  font-size: 25px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+`;
+
+const Button = styled.span`
+  position: relative;
+  display: inline-block;
+
+  margin-top: -60px;
+  img + img {
+    margin-top: 80px;
+    margin-left: 20px;
+  }
+`;
+
+// 팝업 구현
+const Popup = ({ onClose }) => {
+  const navigate = useNavigate();
+  const gotoLogout = () => {
+    navigate("/");
+  };
+  const close = () => {
+    onClose();
+  };
+  return (
+    <ModalOverlay>
+      <ModalContent>
+        <span
+          style={{
+            color: "black",
+            fontSize: "25px",
+            fontWeight: "600",
+          }}
+        >
+          로그아웃
+        </span>
+        <br />
+        <span>하시겠습니까?</span>
+        <Button>
+          <img
+            src={`${process.env.PUBLIC_URL}/images1/yes.png`}
+            alt="yes"
+            width="117px;"
+            onClick={gotoLogout}
+          />
+          <img
+            src={`${process.env.PUBLIC_URL}/images1/no.png`}
+            alt="no"
+            width="117px;"
+            onClick={close}
+          />
+        </Button>
+      </ModalContent>
+    </ModalOverlay>
+  );
+};
+
+// afterlogin 구현
+const AfterLogin = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [showPopup, setShowPopup] = useState(false);
+
+  const handleLogoutBtnClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  useEffect(() => {
+    // showPopup 상태가 변경될 때마다 팝업 띄우기와 닫기를 수행합니다.
+    if (showPopup) {
+      // 팝업 열기
+      document.body.style.overflow = "hidden"; // 팝업이 떠있는 동안 스크롤 막기
+    } else {
+      // 팝업 닫기
+      document.body.style.overflow = "auto"; // 팝업이 닫히면 스크롤 다시 활성화
+    }
+  }, [showPopup]);
 
   const navigate = useNavigate();
-  const gotoLogin = () => {
-    navigate("/login");
-  };
   const gotoAgree = () => {
     navigate("/agreement");
   };
@@ -162,8 +259,8 @@ const Start = () => {
         />
       </Logo>
       <Underlinebtn>
-        <span id="login_under" onClick={gotoLogin}>
-          로그인
+        <span id="logout_under" onClick={handleLogoutBtnClick}>
+          로그아웃
         </span>
         <span id="join_under" onClick={gotoAgree}>
           회원가입
@@ -224,6 +321,7 @@ const Start = () => {
           가 쉬워질 거예요.
         </span>
       </Content>
+      {showPopup && <Popup onClose={handleClosePopup} />}
       <div
         style={{
           display: "flex",
@@ -259,4 +357,4 @@ const Start = () => {
   );
 };
 
-export default Start;
+export default AfterLogin;
