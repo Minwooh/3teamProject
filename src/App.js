@@ -1,4 +1,3 @@
-//import React from "react";
 import React, { useState, useEffect } from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Styled from "styled-components";
@@ -11,6 +10,7 @@ import Agreement from "./pages/semin/agreement";
 import Join from "./pages/semin/join";
 import Login from "./pages/semin/login";
 import Start from "./pages/semin/start";
+import AfterLogin from "./pages/semin/afterlogin";
 
 const App = () => {
   const [items, setItems] = useState([]);
@@ -32,7 +32,6 @@ const App = () => {
             path="/"
             element={<WritePage items={items} setItems={setItems} />}
           />
-
           <Route
             path="/find"
             element={<FindPage items={items} setItems={setItems} />}
@@ -41,13 +40,15 @@ const App = () => {
             path="/myPage"
             element={<MyPage items={items} setItems={setItems} />}
           />
+
           <Route path="/home" element={<Start />} />
 
           {/*세민쓰가 적은 경로*/}
-          {/* <Route path="/" element={<Agreement />} />
-                 <Route path="/join" element={<Join />} />
-                 <Route path="/login" element={<Login />} />
-                 <Route path="/start" element={<Start />} /> */}
+          {/* <Route path="/agreement" element={<Agreement />} />
+          <Route path="/join" element={<Join />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/" element={<Start />} />
+          <Route path="/afterlogin" element={<AfterLogin />} /> */}
         </Routes>
       </div>
     </BrowserRouter>
