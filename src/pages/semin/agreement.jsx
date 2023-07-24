@@ -182,7 +182,7 @@ const Agreement = () => {
     <Container>
       <Logo>
         <img
-          src={`${process.env.PUBLIC_URL}/images/logo.png`}
+          src={`${process.env.PUBLIC_URL}/images1/logo.png`}
           alt="logo"
           width="250px"
         />
@@ -319,7 +319,7 @@ const Agreement = () => {
       </Graybox>
       <Nextbtn>
         <img
-          src={`${process.env.PUBLIC_URL}/images/nextbtn.png`}
+          src={`${process.env.PUBLIC_URL}/images1/nextbtn.png`}
           alt="nextbtn"
           width="90px"
           onClick={gotoJoin}

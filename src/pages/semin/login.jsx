@@ -137,7 +137,13 @@ const Find = styled.div`
 `;
 
 const Login = () => {
-  const handleLoginBtnClick = () => {};
+  const navigate = useNavigate();
+  const gotoAfterLogin = () => {
+    if (id.trim() === "" || pw.trim() === "") {
+      return;
+    }
+    navigate("/afterlogin");
+  };
 
   const [id, setID] = useState("");
   const [pw, setPW] = useState("");
@@ -153,7 +159,7 @@ const Login = () => {
     <Container>
       <Logo>
         <img
-          src={`${process.env.PUBLIC_URL}/images/logo.png`}
+          src={`${process.env.PUBLIC_URL}/images1/logo.png`}
           alt="logo"
           width="250px"
         />
@@ -180,11 +186,12 @@ const Login = () => {
             placeholder="비밀번호"
           ></PWForm>
         </Content>
-        <Loginbtn onClick={handleLoginBtnClick}>
+        <Loginbtn>
           <img
-            src={`${process.env.PUBLIC_URL}/images/loginbtn.png`}
+            src={`${process.env.PUBLIC_URL}/images1/loginbtn.png`}
             alt="loginbtn"
             width="110px"
+            onClick={gotoAfterLogin}
           />
         </Loginbtn>
         <Find>아이디 찾기 | 비밀번호 찾기</Find>
