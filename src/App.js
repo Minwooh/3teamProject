@@ -5,6 +5,7 @@ import Styled from "styled-components";
 import MyPage from "./pages/minwoo/myPage";
 import WritePage from "./pages/minwoo/findEquip/write";
 import FindPage from "./pages/minwoo/findEquip/find";
+import Find2 from "./pages/minwoo/findEquip/find2";
 //pages/semin
 import Agreement from "./pages/semin/agreement";
 import Join from "./pages/semin/join";
@@ -39,6 +40,10 @@ const App = () => {
           <Route
             path="/myPage"
             element={<MyPage items={items} setItems={setItems} />}
+          />
+          <Route
+            path="/find2"
+            element={<Find2 items={items} setItems={setItems} />}
           />
 
           <Route path="/home" element={<Start />} />

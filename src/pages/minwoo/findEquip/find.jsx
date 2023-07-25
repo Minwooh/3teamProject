@@ -183,6 +183,10 @@ const Title = styled.div`
   margin-left: 80px;
 `;
 const Preview = styled.div`
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   position: relative;
   height: 20px;
   width: 200px;
@@ -239,6 +243,10 @@ const FindPage = ({ items, setItems }) => {
     navigate("/home");
   };
 
+  const GoFind2 = () => {
+    navigate("/find2");
+  };
+
   const Top = () => {
     return (
       <TopBox>
@@ -250,7 +258,7 @@ const FindPage = ({ items, setItems }) => {
 
   const ListContent = ({ item }) => {
     return (
-      <WhiteBox key={item.id}>
+      <WhiteBox key={item.id} onClick={GoFind2}>
         <LookImg src="./images2/basic.png"></LookImg>
         <Title>{item.title}</Title>
         <Preview>{item.content}</Preview>
