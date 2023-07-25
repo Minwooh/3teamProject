@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 // import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -88,23 +88,12 @@ const ConditionDo = styled.div`
 
   margin-top: -22px;
   margin-left: 40px;
-
-  width: 85px;
-  height: 24px;
-  flex-shrink: 0;
-
-  background: #efefef;
 `;
 const ConditionDong = styled.div`
   postion: relative;
 
   margin-top: -24px;
   margin-left: 135px;
-  width: 85px;
-  height: 24px;
-  flex-shrink: 0;
-
-  background: #efefef;
 `;
 
 const TextBox = styled.div`
@@ -208,18 +197,29 @@ const Button2 = styled.button`
   line-height: normal;
 `;
 
-const Write = ({ onSave }) => {
+const Write = ({ items, setItems }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [price, setPrice] = useState(0);
-
+  const [price, setPrice] = useState("");
+  //const [ITEMS, setITEMS] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  let id = JSON.parse(localStorage.getItem("id"));
+  id = id ?? 0;
 
   const navigate = useNavigate();
 
-  const GoFind = () => {
-    navigate("/find");
-  };
+  useEffect(() => {
+    const savedItems = localStorage.getItem("ITEMS");
+
+    if (savedItems) {
+      setItems(JSON.parse(savedItems));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("ITEMS", JSON.stringify(items));
+  }, [items]);
 
   const GoMy = () => {
     navigate("/myPage");
@@ -238,32 +238,31 @@ const Write = ({ onSave }) => {
     );
   };
 
-  const handleSave = (e) => {
+  const handleSave = () => {
     // 저장 버튼이 클릭되었을 때 실행되는 로직
     // 서버에 데이터를 전송하여 저장하는 코드를 여기에 작성합니다.
     console.log("제목:", title);
     console.log("내용:", content);
     console.log("가격:", price);
 
-    //const { onSave } = props;
-    //setItems([...items, newItem]);
+    const newItem = {
+      id: id,
+      title: title,
+      content: content,
+      price: price,
+    };
 
-    const newItem = { title, content, price };
-    console.log(newItem);
+    setItems((prevItems) => [...prevItems, newItem]);
 
-    if (typeof onSave === "function") {
-      onSave(newItem);
-    }
-    //onSave가 넘어가지 않음
-    // const { onSave } = newItem;
-    // console.log(onSave);
-    //onSave();
+    localStorage.setItem("ITEMS", JSON.stringify([...items, newItem]));
+    localStorage.setItem("id", JSON.stringify(++id));
 
-    setTitle("");
-    setContent("");
-    setPrice("");
-    //setImage('');
-    //GoFind();
+    GoFind(newItem);
+  };
+
+  const GoFind = (newItem) => {
+    setItems((prevItems) => [...prevItems, newItem]);
+    navigate("/find");
   };
 
   const handleMouseEnter = () => {
@@ -290,8 +289,32 @@ const Write = ({ onSave }) => {
       <ContentBox>
         <ConditionBox>
           지역
-          <ConditionDo></ConditionDo>
-          <ConditionDong></ConditionDong>
+          <ConditionDo>
+            <select
+              name="choice"
+              style={{
+                marginLeft: "5px",
+                width: "80px",
+                height: "20px",
+                background: "#efefef",
+              }}
+            >
+              <option value="new">시/도</option>
+            </select>
+          </ConditionDo>
+          <ConditionDong>
+            <select
+              name="choice"
+              style={{
+                marginLeft: "5px",
+                width: "80px",
+                height: "20px",
+                background: "#efefef",
+              }}
+            >
+              <option value="new">시/도</option>
+            </select>
+          </ConditionDong>
         </ConditionBox>
         <TextBox>
           <InputImg></InputImg>
