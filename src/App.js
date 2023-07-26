@@ -34,6 +34,11 @@ const App = () => {
             element={<WritePage items={items} setItems={setItems} />}
           />
           <Route
+            path="/find2"
+            element={<Find2 items={items} setItems={setItems} />}
+          />
+          <Route path="/home" element={<Start />} />*/}
+          <Route
             path="/find"
             element={<FindPage items={items} setItems={setItems} />}
           />
@@ -41,12 +46,6 @@ const App = () => {
             path="/myPage"
             element={<MyPage items={items} setItems={setItems} />}
           />
-          <Route
-            path="/find2"
-            element={<Find2 items={items} setItems={setItems} />}
-          />
-
-      <Route path="/home" element={<Start />} />*/}
 
           {/*세민쓰가 적은 경로*/}
           <Route path="/agreement" element={<Agreement />} />

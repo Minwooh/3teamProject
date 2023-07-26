@@ -238,8 +238,11 @@ const AfterLogin = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const navigate = useNavigate();
-  const gotoAgree = () => {
-    navigate("/agreement");
+  const gotomyPage = () => {
+    navigate("/myPage");
+  };
+  const gotoFind = () => {
+    navigate("/find");
   };
 
   const handleDotClick = (index) => {
@@ -283,8 +286,8 @@ const AfterLogin = () => {
         <span id="logout_under" onClick={handleLogoutBtnClick}>
           로그아웃
         </span>
-        <span id="join_under" onClick={gotoAgree}>
-          회원가입
+        <span id="my_under" onClick={gotomyPage}>
+          마이페이지
         </span>
       </Underlinebtn>
       <Images>
@@ -350,7 +353,7 @@ const AfterLogin = () => {
           justifyContent: "center",
         }}
       >
-        <Menu>
+        <Menu onClick={gotoFind}>
           농기구
           <br />
           검색
