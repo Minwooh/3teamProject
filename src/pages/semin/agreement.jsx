@@ -156,6 +156,8 @@ const Nextbtn = styled.div`
 
   left: 105px;
   top: 15px;
+
+  cursor: pointer;
 `;
 
 const Agreement = () => {

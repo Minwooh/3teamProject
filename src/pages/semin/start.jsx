@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
@@ -119,6 +119,7 @@ const Menu = styled.div`
   line-height: normal;
 
   margin: 14px;
+  cursor: pointer;
 
   &:hover {
     box-shadow: 0px 0px 4.423137187957764px 0px #000;
@@ -132,6 +133,8 @@ const Down = styled.div`
 
 const Start = () => {
   const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
 
   const navigate = useNavigate();
   const gotoLogin = () => {
@@ -152,6 +155,22 @@ const Start = () => {
     `${process.env.PUBLIC_URL}/images1/image4.png`,
   ];
 
+  const changeImage = () => {
+    // 다음 이미지 인덱스 계산, 마지막인 경우 첫번째로
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  useEffect(() => {
+    const slideshowInterval = setInterval(changeImage, 3500); // 3.5초마다 이미지 변경
+
+    // 컴포넌트가 언마운트될 때 인터벌을 정리
+    return () => clearInterval(slideshowInterval);
+  }, []); // currentIndex가 변경될 때마다 useEffect 실행
+
+  useEffect(() => {
+    setSelectedImageIndex(currentIndex);
+  }, [currentIndex]);
+
   return (
     <Container>
       <Logo>
@@ -171,8 +190,8 @@ const Start = () => {
       </Underlinebtn>
       <Images>
         <img
-          src={images[selectedImageIndex]}
-          alt={`image${selectedImageIndex + 1}`}
+          src={images[currentIndex]}
+          alt={`image${currentIndex + 1}`}
           width="414px"
         />
       </Images>

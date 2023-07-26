@@ -84,7 +84,6 @@ const Dots = styled.div`
   border-radius: 50%;
   background-color: rgba(34, 90, 0, 0.5);
   margin-right: 8px;
-
   background-color: ${({ active }) =>
     active ? "rgba(34, 90, 0, 0.9)" : "rgba(34, 90, 0, 0.5)"};
 `;
@@ -119,6 +118,7 @@ const Menu = styled.div`
   line-height: normal;
 
   margin: 14px;
+  cursor: pointer;
 
   &:hover {
     box-shadow: 0px 0px 4.423137187957764px 0px #000;
@@ -161,6 +161,8 @@ const Button = styled.span`
   display: inline-block;
 
   margin-top: -60px;
+  cursor: pointer;
+
   img + img {
     margin-top: 80px;
     margin-left: 20px;
@@ -211,17 +213,7 @@ const Popup = ({ onClose }) => {
 
 // afterlogin 구현
 const AfterLogin = () => {
-  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
-
-  const handleLogoutBtnClick = () => {
-    setShowPopup(true);
-  };
-
-  const handleClosePopup = () => {
-    setShowPopup(false);
-  };
-
   useEffect(() => {
     // showPopup 상태가 변경될 때마다 팝업 띄우기와 닫기를 수행합니다.
     if (showPopup) {
@@ -233,6 +225,18 @@ const AfterLogin = () => {
     }
   }, [showPopup]);
 
+  const handleLogoutBtnClick = () => {
+    setShowPopup(true);
+  };
+
+  const handleClosePopup = () => {
+    setShowPopup(false);
+  };
+
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+
+  const [currentIndex, setCurrentIndex] = useState(0);
+
   const navigate = useNavigate();
   const gotoAgree = () => {
     navigate("/agreement");
@@ -240,6 +244,7 @@ const AfterLogin = () => {
 
   const handleDotClick = (index) => {
     setSelectedImageIndex(index);
+    setCurrentIndex(index);
   };
 
   const images = [
@@ -248,6 +253,22 @@ const AfterLogin = () => {
     `${process.env.PUBLIC_URL}/images1/image3.png`,
     `${process.env.PUBLIC_URL}/images1/image4.png`,
   ];
+
+  const changeImage = () => {
+    // 다음 이미지 인덱스 계산, 마지막인 경우 첫번째로
+    setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
+  };
+
+  useEffect(() => {
+    const slideshowInterval = setInterval(changeImage, 3500); // 3.5초마다 이미지 변경
+
+    // 컴포넌트가 언마운트될 때 인터벌을 정리
+    return () => clearInterval(slideshowInterval);
+  }, []); // currentIndex가 변경될 때마다 useEffect 실행
+
+  useEffect(() => {
+    setSelectedImageIndex(currentIndex);
+  }, [currentIndex]);
 
   return (
     <Container>
@@ -268,8 +289,8 @@ const AfterLogin = () => {
       </Underlinebtn>
       <Images>
         <img
-          src={images[selectedImageIndex]}
-          alt={`image${selectedImageIndex + 1}`}
+          src={images[currentIndex]}
+          alt={`image${currentIndex + 1}`}
           width="414px"
         />
       </Images>

@@ -178,6 +178,7 @@ const Joinbtn = styled.div`
   position: relative;
 
   margin-top: 20px;
+  cursor: pointer;
 `;
 
 const ModalOverlay = styled.div`
@@ -207,7 +208,9 @@ const ModalContent = styled.div`
 
 const ReLoginButton = styled.span`
   position: relative;
+
   top: 50px;
+  cursor: pointer;
 `;
 
 // 팝업 구현
@@ -256,6 +259,9 @@ const Join = () => {
       phone2.trim() === "" ||
       phone3.trim() === ""
     ) {
+      return;
+    }
+    if (pw !== pwcheck) {
       return;
     }
     setShowPopup(true);

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import "./Placeholder.css";
 import { useNavigate } from "react-router-dom";
@@ -130,6 +130,7 @@ const Loginbtn = styled.div`
 
   margin-top: 20px;
   margin-bottom: 12px;
+  cursor: pointer;
 `;
 
 const Find = styled.div`
