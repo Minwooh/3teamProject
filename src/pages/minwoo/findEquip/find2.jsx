@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 const Container = styled.div`
   width: 414px;
@@ -95,20 +96,31 @@ const MiddleDate = styled.div`
 `;
 const MiddleWhite = styled.div`
   width: 301px;
-  height: 360px;
+  height: 340px;
 
-  margin-left: 23px;
+  margin-left: 13px;
   margin-top: 5px;
+  padding: 10px;
 
   border-radius: 10px;
   background: #fff;
   box-shadow: 0px 0px 1px 0px rgba(0, 0, 0, 0.5);
 `;
+
+const WhiteTitle = styled.span`
+  color: #3c3c3c;
+  font-family: Inter;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`;
 const WhiteContent = styled.div`
   background: #ff0022;
-  height: 180px;
+  height: 145px;
 
   margin-top: 10px;
+  padding: 10px;
 
   color: #030303;
   font-family: Inter;
@@ -128,15 +140,20 @@ const WhitePrice = styled.div`
 `;
 
 const BottomBox = styled.div`
-  background-color: #00ff22;
   width: 360px;
-  height: 80px;
-`;
-const BottomBtn = styled.div`
-  width: 136px;
-  height: 38px;
-  flex-shrink: 0;
+  height: 60px;
 
+  padding-top: 25px;
+  padding-left: 57px;
+`;
+const BottomBtn = styled.button`
+  width: 150px;
+  height: 38px;
+
+  margin-left: 10px;
+  padding-left: 20px;
+
+  border: none;
   border-radius: 10px;
   background: #225a00;
 
@@ -145,11 +162,53 @@ const BottomBtn = styled.div`
   font-size: 17px;
   font-style: normal;
   font-weight: 600;
-  line-height: normal;
+  line-height: 30px;
 `;
 
-const Find2 = ({ items, setItems }) => {
+const Find2 = () => {
   const navigate = useNavigate();
+  const [imageSrc, setImageSrc] = useState("/images2/whiteHeart.png");
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  // URL 파라미터로부터 title, content, price 값을 가져옴
+  const id = queryParams.get("id");
+  console.log(id);
+  const title = queryParams.get("title");
+  const content = queryParams.get("content");
+  const price = queryParams.get("price");
+
+  useEffect(() => {
+    // 이미지 상태가 바뀔 때마다 로컬 스토리지의 like 값을 업데이트
+    const newLikeValue = imageSrc === "/images2/fillHeart.png";
+
+    updateLocalStorage(newLikeValue);
+  }, [imageSrc]);
+
+  const updateLocalStorage = (newLikeValue) => {
+    const items = JSON.parse(localStorage.getItem("ITEMS"));
+
+    if (items) {
+      const updatedItems = items.map(
+        (item) => (item.id === id ? { ...item, like: newLikeValue } : item)
+        // parseInt(item.id) === parseInt(id) ? console.log("true") : item
+      );
+      localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
+    }
+  };
+
+  const handleClick = () => {
+    setImageSrc((prevSrc) =>
+      prevSrc === "/images2/whiteHeart.png"
+        ? "/images2/fillHeart.png" // 두 번째 이미지의 경로로 바꿔주세요.
+        : "/images2/whiteHeart.png"
+    );
+  };
+
+  const GoHome = () => {
+    navigate("/afterLogin");
+  };
 
   const GoMy = () => {
     navigate("/myPage");
@@ -172,7 +231,7 @@ const Find2 = ({ items, setItems }) => {
     <Container>
       <Top />
       <TitleBox>
-        <img src="/images2/title.png" alt="있농" />
+        <img src="/images2/title.png" alt="있농" onClick={GoHome} />
         <Line></Line>
       </TitleBox>
 
@@ -180,17 +239,40 @@ const Find2 = ({ items, setItems }) => {
         <MiddleTop />
         <MiddleDate></MiddleDate>
         <MiddleWhite>
-          <div></div>
+          <div>
+            <WhiteTitle>{title}</WhiteTitle>
+            <img src="/images2/seed.png" style={{ marginLeft: "210px" }} />
+          </div>
           <img src="" />
-          <WhiteContent></WhiteContent>
-          <WhitePrice></WhitePrice>
+          <WhiteContent>{content}</WhiteContent>
+          <WhitePrice>{price}</WhitePrice>
           <div style={{ marginTop: "-23px", marginLeft: "263px" }}>원</div>
         </MiddleWhite>
       </MiddleBox>
 
       <BottomBox>
-        <BottomBtn>연락하기</BottomBtn>
-        <BottomBtn>관심목록지정</BottomBtn>
+        <BottomBtn>
+          <img
+            src="/images2/message.png"
+            style={{
+              position: "absolute",
+              marginTop: "8px",
+              marginLeft: "-23px",
+            }}
+          />
+          연락하기
+        </BottomBtn>
+        <BottomBtn onClick={handleClick}>
+          <img
+            src={imageSrc}
+            style={{
+              position: "absolute",
+              marginTop: "8px",
+              marginLeft: "-20px",
+            }}
+          />
+          관심목록지정
+        </BottomBtn>
       </BottomBox>
     </Container>
   );

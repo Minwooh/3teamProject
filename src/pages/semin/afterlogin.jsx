@@ -241,6 +241,10 @@ const AfterLogin = () => {
   const gotoAgree = () => {
     navigate("/agreement");
   };
+  // 농기구 검색 누르면 농기구 검색 페이지로 이동
+  const Gofind = () => {
+    navigate("/find");
+  };
 
   const handleDotClick = (index) => {
     setSelectedImageIndex(index);
@@ -350,7 +354,7 @@ const AfterLogin = () => {
           justifyContent: "center",
         }}
       >
-        <Menu>
+        <Menu onClick={Gofind}>
           농기구
           <br />
           검색

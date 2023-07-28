@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import Dropdown from "./Dropdown";
 
 const Container = styled.div`
   width: 414px;
@@ -239,12 +238,12 @@ const FindPage = ({ items, setItems }) => {
     navigate("/myPage");
   };
 
-  const Logout = () => {
-    navigate("/home");
+  const GoHome = () => {
+    navigate("/afterLogin");
   };
 
-  const GoFind2 = () => {
-    navigate("/find2");
+  const Logout = () => {
+    navigate("/home");
   };
 
   const Top = () => {
@@ -257,6 +256,20 @@ const FindPage = ({ items, setItems }) => {
   };
 
   const ListContent = ({ item }) => {
+    const GoFind2 = () => {
+      //navigate("/find2");
+
+      navigate(
+        `/find2?title=${encodeURIComponent(
+          item.title
+        )}&content=${encodeURIComponent(
+          item.content
+        )}&price=${encodeURIComponent(item.price)}&id=${encodeURIComponent(
+          item.id
+        )}`
+      );
+    };
+
     return (
       <WhiteBox key={item.id} onClick={GoFind2}>
         <LookImg src="./images2/basic.png"></LookImg>
@@ -265,7 +278,7 @@ const FindPage = ({ items, setItems }) => {
         <SeedImg>
           <img src="./images2/seed.png" alt="시드" />
         </SeedImg>
-        <ClickCount>{item.price}</ClickCount>
+        <ClickCount></ClickCount>
       </WhiteBox>
     );
   };
@@ -274,7 +287,7 @@ const FindPage = ({ items, setItems }) => {
     <Container>
       <Top />
       <TitleBox>
-        <img src="/images2/title.png" alt="있농" />
+        <img src="/images2/title.png" alt="있농" onClick={GoHome} />
         <Line></Line>
       </TitleBox>
 
