@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 // import { BrowserRouter as Router, Route, Link } from "react-router-dom";
@@ -204,6 +204,19 @@ const Write = ({ items, setItems }) => {
   //const [ITEMS, setITEMS] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+  //
+  const [imgFile, setImgFile] = useState([]); // 이미지 배열
+  const upload = useRef();
+
+  const imgUpload = () => {
+    console.log(upload.current.files);
+    setImgFile((prev) => [
+      ...prev,
+      URL.createObjectURL(upload.current.files[0]),
+    ]);
+  };
+  //
+
   let id = JSON.parse(localStorage.getItem("id"));
   id = id ?? 0;
 
@@ -229,6 +242,9 @@ const Write = ({ items, setItems }) => {
     navigate("/home");
   };
 
+  const GoInput = () => {
+    navigate("/imgInput");
+  };
   const Top = () => {
     return (
       <TopBox>
@@ -319,22 +335,48 @@ const Write = ({ items, setItems }) => {
           </ConditionDong>
         </ConditionBox>
         <TextBox>
-          <InputImg></InputImg>
+          {/* <InputImg></InputImg> */}
+          <div style={{ display: "flex" }}>
+            {imgFile?.map((img, idx) => (
+              <div
+                key={idx}
+                style={{ margin: "20px", border: "1px solid black" }}
+              >
+                <img
+                  style={{ width: "200px", height: "200px " }}
+                  src={img}
+                  alt="img"
+                />
+              </div>
+            ))}
+          </div>
           <InputContent
             value={content}
             onChange={(e) => setContent(e.target.value)}
           ></InputContent>
         </TextBox>
         <AddBox onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          <img src="/images2/img.png" alt="사진첨부" />
+          <input
+            type="file"
+            ref={upload}
+            multiple
+            onChange={imgUpload}
+            accept="image/*"
+            style={{
+              zIndex: "2",
+              marginBottom: "10px",
+              cursor: "pointer",
+            }}
+          />
+          {/* <img src="/images2/img.png" alt="사진첨부" onClick={GoInput} />
           {isDropdownOpen && (
             <DropdownMenu>
               <DropdownItem>
                 <img src="/images2/link.png" alt="링크첨부" />
               </DropdownItem>
               {/* <DropdownItem></DropdownItem> */}
-            </DropdownMenu>
-          )}
+          {/* </DropdownMenu> */}
+          {/* )}  */}
         </AddBox>
         <PriceBox>
           가격
