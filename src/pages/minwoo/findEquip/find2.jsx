@@ -178,6 +178,7 @@ const Find2 = () => {
   const title = queryParams.get("title");
   const content = queryParams.get("content");
   const price = queryParams.get("price");
+  const count = queryParams.get("count");
 
   useEffect(() => {
     // 이미지 상태가 바뀔 때마다 로컬 스토리지의 like 값을 업데이트
@@ -241,7 +242,11 @@ const Find2 = () => {
         <MiddleWhite>
           <div>
             <WhiteTitle>{title}</WhiteTitle>
-            <img src="/images2/seed.png" style={{ marginLeft: "210px" }} />
+            <img
+              src="/images2/seed.png"
+              style={{ marginLeft: "190px", marginRight: "5px" }}
+            />
+            {count}
           </div>
           <img src="" />
           <WhiteContent>{content}</WhiteContent>

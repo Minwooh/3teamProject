@@ -256,8 +256,24 @@ const FindPage = ({ items, setItems }) => {
   };
 
   const ListContent = ({ item }) => {
+    const [cnt, setCount] = useState(0);
+
+    // useEffect(() => {
+    //   // count 값이 변경될 때마다 localStorage에 저장합니다.
+    //   localStorage.setItem(`COUNT_${item.id}`, cnt);
+    // }, [cnt, item.id]);
+
     const GoFind2 = () => {
-      //navigate("/find2");
+      // items 배열에서 아이템의 인덱스 찾기
+      const itemIndex = items.findIndex((i) => i.id === item.id);
+
+      // 특정 아이템의 카운트 업데이트
+      const updatedItems = [...items];
+      updatedItems[itemIndex] = { ...item, count: item.count + 1 };
+
+      // 업데이트된 items 배열을 상태와 localStorage에 저장
+      setItems(updatedItems);
+      localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
 
       navigate(
         `/find2?title=${encodeURIComponent(
@@ -266,7 +282,7 @@ const FindPage = ({ items, setItems }) => {
           item.content
         )}&price=${encodeURIComponent(item.price)}&id=${encodeURIComponent(
           item.id
-        )}`
+        )}&count=${encodeURIComponent(item.count)}`
       );
     };
 
@@ -278,7 +294,7 @@ const FindPage = ({ items, setItems }) => {
         <SeedImg>
           <img src="./images2/seed.png" alt="시드" />
         </SeedImg>
-        <ClickCount></ClickCount>
+        <ClickCount>{item.count}</ClickCount>
       </WhiteBox>
     );
   };
