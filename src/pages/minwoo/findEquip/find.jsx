@@ -231,7 +231,7 @@ const FindPage = ({ items, setItems }) => {
   }, [setItems]);
 
   const GoWrite = () => {
-    navigate("/");
+    navigate("/write");
   };
 
   const GoMy = () => {
@@ -243,7 +243,7 @@ const FindPage = ({ items, setItems }) => {
   };
 
   const Logout = () => {
-    navigate("/home");
+    navigate("/");
   };
 
   const Top = () => {
