@@ -250,6 +250,8 @@ const Write = ({ items, setItems }) => {
       title: title,
       content: content,
       price: price,
+      like: false,
+      count: 0,
     };
 
     setItems((prevItems) => [...prevItems, newItem]);

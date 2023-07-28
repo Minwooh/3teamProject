@@ -224,13 +224,18 @@ const ClickCount = styled.div`
 `;
 
 const NongArea = styled.div`
-  background-color: #00ff22;
-
   width: 330px;
   height: 60px;
 
   margin-left: 3px;
-  margin-top: 55px;
+  margin-top: 5px;
+
+  overflow: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   color: #0c0c0c;
   font-family: Inter;
@@ -240,11 +245,17 @@ const NongArea = styled.div`
   line-height: normal;
 `;
 const LandArea = styled.div`
-  background-color: #00ff22;
   width: 330px;
   height: 60px;
 
   margin-left: 3px;
+
+  overflow: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   color: #0c0c0c;
   font-family: Inter;
@@ -254,41 +265,13 @@ const LandArea = styled.div`
   line-height: normal;
 `;
 
-// const ListContent = ({ item }) => {
-//   return (
-//     <WhiteBox>
-//       <HeartImg>
-//         <img src="./images2/heart.png" style={{ height: "10px" }} />
-//       </HeartImg>
-//       <LookImg src="./images2/basic.png"></LookImg>
-//       <Title>{item.title}</Title>
-//       <Preview>{item.content}</Preview>
-//       <SeedImg>
-//         <img src="./images2/seed.png" />
-//       </SeedImg>
-//       <ClickCount>4300</ClickCount>
-//     </WhiteBox>
-//   );
-// };
-
-// const DisplayItems = ({ item }) => {
-//   return (
-//     <WhiteBox>
-//       <HeartImg>
-//         <img src="./images2/heart.png" style={{ height: "10px" }} />
-//       </HeartImg>
-//       <LookImg src="./images2/basic.png"></LookImg>
-//       <Title>{item.title}</Title>
-//       <Preview>{item.content}</Preview>
-//       <SeedImg>
-//         <img src="./images2/seed.png" />
-//       </SeedImg>
-//       <ClickCount>4300</ClickCount>
-//     </WhiteBox>
-//   );
-// };
-
 const Page = ({ items, setItems }) => {
+  const navigate = useNavigate();
+
+  const GoHome = () => {
+    navigate("/afterLogin");
+  };
+
   useEffect(() => {
     const savedItems = localStorage.getItem("ITEMS");
     if (savedItems) {
@@ -300,7 +283,7 @@ const Page = ({ items, setItems }) => {
     return (
       <div
         style={{
-          marginTop: "-48px",
+          marginTop: "2px",
           marginLeft: "0px",
           width: "260px",
           height: "18px",
@@ -332,7 +315,7 @@ const Page = ({ items, setItems }) => {
     <Container>
       <Top />
       <TitleBox>
-        <img src="/images2/title.png" />
+        <img src="/images2/title.png" onClick={GoHome} />
       </TitleBox>
 
       <SmallTitle>
