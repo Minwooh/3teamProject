@@ -31,7 +31,7 @@ const App = () => {
         <Routes>
           {/* 사용할 때 아래의 경로들 잠깐 주석처리하고 쓰기  */}
           <Route
-            path="/"
+            path="/write"
             element={<WritePage items={items} setItems={setItems} />}
           />
           <Route
@@ -52,13 +52,12 @@ const App = () => {
             path="/find2"
             element={<Find2 items={items} setItems={setItems} />}
           />
-          <Route path="/home" element={<Start />} />
           <Route path="/imgInput" element={<Input />} />
           {/*세민쓰가 적은 경로*/}
-          {/* <Route path="/agreement" element={<Agreement />} />
+          <Route path="/agreement" element={<Agreement />} />
           <Route path="/join" element={<Join />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/" element={<Start />} /> */}
+          <Route path="/" element={<Start />} />
           <Route path="/afterlogin" element={<AfterLogin />} />
         </Routes>
       </div>

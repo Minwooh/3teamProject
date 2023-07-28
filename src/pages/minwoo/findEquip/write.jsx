@@ -335,21 +335,22 @@ const Write = ({ items, setItems }) => {
           </ConditionDong>
         </ConditionBox>
         <TextBox>
-          {/* <InputImg></InputImg> */}
+          {/* <InputImg> */}
           <div style={{ display: "flex" }}>
             {imgFile?.map((img, idx) => (
               <div
                 key={idx}
-                style={{ margin: "20px", border: "1px solid black" }}
+                style={{ marginLeft: "90px", border: "1px solid black" }}
               >
                 <img
-                  style={{ width: "200px", height: "200px " }}
+                  style={{ width: "160px", height: "160px " }}
                   src={img}
                   alt="img"
                 />
               </div>
             ))}
           </div>
+          {/* </InputImg> */}
           <InputContent
             value={content}
             onChange={(e) => setContent(e.target.value)}
@@ -366,6 +367,7 @@ const Write = ({ items, setItems }) => {
               zIndex: "2",
               marginBottom: "10px",
               cursor: "pointer",
+              borderRadius: "10px",
             }}
           />
           {/* <img src="/images2/img.png" alt="사진첨부" onClick={GoInput} />
