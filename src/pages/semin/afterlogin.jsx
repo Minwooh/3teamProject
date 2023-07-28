@@ -238,8 +238,11 @@ const AfterLogin = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const navigate = useNavigate();
-  const gotoAgree = () => {
-    navigate("/agreement");
+  const gotomyPage = () => {
+    navigate("/myPage");
+  };
+  const gotoFind = () => {
+    navigate("/find");
   };
   // 농기구 검색 누르면 농기구 검색 페이지로 이동
   const Gofind = () => {
@@ -287,8 +290,8 @@ const AfterLogin = () => {
         <span id="logout_under" onClick={handleLogoutBtnClick}>
           로그아웃
         </span>
-        <span id="join_under" onClick={gotoAgree}>
-          회원가입
+        <span id="my_under" onClick={gotomyPage}>
+          마이페이지
         </span>
       </Underlinebtn>
       <Images>
@@ -354,7 +357,11 @@ const AfterLogin = () => {
           justifyContent: "center",
         }}
       >
+<<<<<<< HEAD
         <Menu onClick={Gofind}>
+=======
+        <Menu onClick={gotoFind}>
+>>>>>>> e78147d0b69844af4f87f54cd3c1d002ca294cf2
           농기구
           <br />
           검색
