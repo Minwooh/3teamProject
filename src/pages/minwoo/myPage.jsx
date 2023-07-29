@@ -204,14 +204,30 @@ const Title = styled.div`
 `;
 const ListTitle = styled.div`
   display: inlin-box;
+
+  height: 20px;
+  width: 200px;
+
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  position: relative;
+
   margin-top: -50px;
   margin-left: 80px;
 `;
 
 const Preview = styled.div`
   position: relative;
+
   height: 20px;
   width: 200px;
+
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   margin-left: 80px;
 `;
 const SeedImg = styled.div`
@@ -294,19 +310,47 @@ const Page = ({ items, setItems }) => {
     );
   };
 
-  const ListContent = ({ item }) => {
+  const getLikedItems = () => {
+    return items.filter((item) => item.like === true);
+  };
+
+  const updateLikeStatus = (id) => {
+    const updatedItems = items.map((item) =>
+      item.id === id ? { ...item, like: !item.like } : item
+    );
+
+    setItems(updatedItems);
+    localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
+  };
+
+  const ListContent = ({ item, updateLikeStatus }) => {
+    const GoFind2 = () => {
+      navigate(
+        `/find2?title=${encodeURIComponent(
+          item.title
+        )}&content=${encodeURIComponent(
+          item.content
+        )}&price=${encodeURIComponent(item.price)}&id=${encodeURIComponent(
+          item.id
+        )}&count=${encodeURIComponent(item.count)}
+        &image=${encodeURIComponent(item.image)}`
+      );
+    };
+
     return (
       <WhiteBox>
-        <HeartImg>
+        <HeartImg onClick={() => updateLikeStatus(item.id)}>
           <img src="./images2/heart.png" style={{ height: "10px" }} />
         </HeartImg>
-        <LookImg src="./images2/basic.png"></LookImg>
-        <ListTitle>{item.title}</ListTitle>
-        <Preview>{item.content}</Preview>
+        <div onClick={GoFind2}>
+          <LookImg src="./images2/basic.png"></LookImg>
+          <ListTitle>{item.title}</ListTitle>
+          <Preview>{item.content}</Preview>
+        </div>
         <SeedImg>
           <img src="./images2/seed.png" />
         </SeedImg>
-        <ClickCount>4300</ClickCount>
+        <ClickCount>{item.price}</ClickCount>
       </WhiteBox>
     );
   };
@@ -350,8 +394,12 @@ const Page = ({ items, setItems }) => {
           관심목록
         </ListText>
         <ListBox>
-          {items.map((item) => (
-            <ListContent key={item.id} item={item} />
+          {getLikedItems().map((item) => (
+            <ListContent
+              key={item.id}
+              item={item}
+              updateLikeStatus={updateLikeStatus}
+            />
           ))}
         </ListBox>
       </LikeBox>

@@ -177,7 +177,15 @@ const LookImg = styled.img`
   margin-top: 8px;
 `;
 const Title = styled.div`
-  display: inlin-box;
+  height: 20px;
+  width: 200px;
+
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  position: relative;
+
   margin-top: -50px;
   margin-left: 80px;
 `;
@@ -266,11 +274,9 @@ const FindPage = ({ items, setItems }) => {
     const GoFind2 = () => {
       // items 배열에서 아이템의 인덱스 찾기
       const itemIndex = items.findIndex((i) => i.id === item.id);
-
       // 특정 아이템의 카운트 업데이트
       const updatedItems = [...items];
       updatedItems[itemIndex] = { ...item, count: item.count + 1 };
-
       // 업데이트된 items 배열을 상태와 localStorage에 저장
       setItems(updatedItems);
       localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
@@ -282,7 +288,8 @@ const FindPage = ({ items, setItems }) => {
           item.content
         )}&price=${encodeURIComponent(item.price)}&id=${encodeURIComponent(
           item.id
-        )}&count=${encodeURIComponent(item.count)}`
+        )}&count=${encodeURIComponent(item.count)}
+        &image=${encodeURIComponent(item.image)}`
       );
     };
 

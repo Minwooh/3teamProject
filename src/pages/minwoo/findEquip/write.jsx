@@ -203,9 +203,8 @@ const Write = ({ items, setItems }) => {
   const [price, setPrice] = useState("");
   //const [ITEMS, setITEMS] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-
-  //
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
+
   const upload = useRef();
 
   const imgUpload = () => {
@@ -268,6 +267,7 @@ const Write = ({ items, setItems }) => {
       price: price,
       like: false,
       count: 0,
+      image: imgFile,
     };
 
     setItems((prevItems) => [...prevItems, newItem]);
@@ -334,6 +334,7 @@ const Write = ({ items, setItems }) => {
             </select>
           </ConditionDong>
         </ConditionBox>
+
         <TextBox>
           {/* <InputImg> */}
           <div style={{ display: "flex" }}>
@@ -356,30 +357,33 @@ const Write = ({ items, setItems }) => {
             onChange={(e) => setContent(e.target.value)}
           ></InputContent>
         </TextBox>
+
         <AddBox onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+          <label for="uplaoad_img">
+            <img src="/images2/img.png" alt="사진첨부" />
+          </label>
           <input
+            id="uplaoad_img"
             type="file"
             ref={upload}
             multiple
             onChange={imgUpload}
             accept="image/*"
             style={{
-              zIndex: "2",
-              marginBottom: "10px",
+              display: "none",
               cursor: "pointer",
-              borderRadius: "10px",
             }}
           />
-          {/* <img src="/images2/img.png" alt="사진첨부" onClick={GoInput} />
-          {isDropdownOpen && (
+          {/* {isDropdownOpen && (
             <DropdownMenu>
               <DropdownItem>
                 <img src="/images2/link.png" alt="링크첨부" />
-              </DropdownItem>
-              {/* <DropdownItem></DropdownItem> */}
+              </DropdownItem> */}
+          {/* <DropdownItem></DropdownItem> */}
           {/* </DropdownMenu> */}
           {/* )}  */}
         </AddBox>
+
         <PriceBox>
           가격
           <AddPrice

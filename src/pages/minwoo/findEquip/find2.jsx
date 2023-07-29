@@ -44,7 +44,7 @@ const Line = styled.div`
 
 const MiddleBox = styled.div`
   width: 350px;
-  height: 485px;
+  height: 498px;
 
   margin-left: 36px;
   margin-top: 20px;
@@ -96,7 +96,7 @@ const MiddleDate = styled.div`
 `;
 const MiddleWhite = styled.div`
   width: 301px;
-  height: 340px;
+  height: 358px;
 
   margin-left: 13px;
   margin-top: 5px;
@@ -116,11 +116,17 @@ const WhiteTitle = styled.span`
   line-height: normal;
 `;
 const WhiteContent = styled.div`
-  background: #ff0022;
-  height: 145px;
+  height: 100px;
 
-  margin-top: 10px;
+  margin-top: 6px;
   padding: 10px;
+
+  overflow: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 
   color: #030303;
   font-family: Inter;
@@ -141,7 +147,7 @@ const WhitePrice = styled.div`
 
 const BottomBox = styled.div`
   width: 360px;
-  height: 60px;
+  height: 50px;
 
   padding-top: 25px;
   padding-left: 57px;
@@ -150,8 +156,9 @@ const BottomBtn = styled.button`
   width: 150px;
   height: 38px;
 
-  margin-left: 10px;
+  margin-left: 5px;
   padding-left: 20px;
+  margin-top: -20px;
 
   border: none;
   border-radius: 10px;
@@ -165,24 +172,32 @@ const BottomBtn = styled.button`
   line-height: 30px;
 `;
 
-const Find2 = () => {
+const Find2 = ({ item }) => {
   const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState("/images2/whiteHeart.png");
+  // const [imageSrc, setImageSrc] = useState(() => {
+  //   // 페이지를 불러올 때 localStorage에서 이미지 상태를 가져옴
+  //   const savedImageSrc = localStorage.getItem("imageSrc");
+  //   return savedImageSrc ? savedImageSrc : "/images2/whiteHeart.png";
+  // });
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
 
   // URL 파라미터로부터 title, content, price 값을 가져옴
   const id = queryParams.get("id");
-  console.log(id);
   const title = queryParams.get("title");
   const content = queryParams.get("content");
   const price = queryParams.get("price");
   const count = queryParams.get("count");
 
+  const image = queryParams.get("image");
+  const imageUrl = image ? image : null;
+
   useEffect(() => {
     // 이미지 상태가 바뀔 때마다 로컬 스토리지의 like 값을 업데이트
     const newLikeValue = imageSrc === "/images2/fillHeart.png";
+    console.log(newLikeValue);
 
     updateLocalStorage(newLikeValue);
   }, [imageSrc]);
@@ -191,11 +206,21 @@ const Find2 = () => {
     const items = JSON.parse(localStorage.getItem("ITEMS"));
 
     if (items) {
-      const updatedItems = items.map(
-        (item) => (item.id === id ? { ...item, like: newLikeValue } : item)
-        // parseInt(item.id) === parseInt(id) ? console.log("true") : item
-      );
-      localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
+      const itemIndex = items.findIndex((item) => item.id === parseInt(id, 10));
+
+      if (itemIndex !== -1) {
+        // 아이템의 좋아요 상태를 업데이트합니다.
+        const updatedItems = [...items];
+        updatedItems[itemIndex].like = newLikeValue;
+
+        // 업데이트된 아이템 배열을 로컬 스토리지에 저장합니다.
+        //localStorage.setItem("imageSrc", imageSrc);
+        localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
+
+        setImageSrc(
+          newLikeValue ? "/images2/fillHeart.png" : "/images2/whiteHeart.png"
+        );
+      }
     }
   };
 
@@ -244,11 +269,20 @@ const Find2 = () => {
             <WhiteTitle>{title}</WhiteTitle>
             <img
               src="/images2/seed.png"
-              style={{ marginLeft: "190px", marginRight: "5px" }}
+              style={{
+                marginLeft: "130px",
+                marginRight: "5px",
+              }}
             />
             {count}
           </div>
-          <img src="" />
+          {imageUrl && (
+            <img
+              src={imageUrl}
+              alt="이미지"
+              style={{ height: "150px", marginLeft: "70px" }}
+            />
+          )}
           <WhiteContent>{content}</WhiteContent>
           <WhitePrice>{price}</WhitePrice>
           <div style={{ marginTop: "-23px", marginLeft: "263px" }}>원</div>
