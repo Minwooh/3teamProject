@@ -76,6 +76,7 @@ const TopLevel = styled.div`
   line-height: normal;
 `;
 const MiddleTop = () => {
+  const loggedInUserID = localStorage.getItem("loggedInUserID"); // 로그인을 위해 추가 -세민-
   return (
     <div
       style={{
@@ -85,7 +86,7 @@ const MiddleTop = () => {
       }}
     >
       <img src="./images2/basic.png" />
-      <TopName>민지</TopName>
+      <TopName>{loggedInUserID}</TopName>
       <TopLevel>행복한 농부</TopLevel>
     </div>
   );

@@ -139,10 +139,12 @@ const Find = styled.div`
 
 const Login = () => {
   const navigate = useNavigate();
+
   const gotoAfterLogin = () => {
     if (id.trim() === "" || pw.trim() === "") {
       return;
     }
+    localStorage.setItem("loggedInUserID", id);
     navigate("/afterlogin");
   };
 
