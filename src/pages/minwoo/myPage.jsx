@@ -283,6 +283,7 @@ const LandArea = styled.div`
 
 const Page = ({ items, setItems }) => {
   const navigate = useNavigate();
+  const loggedInUserID = localStorage.getItem("loggedInUserID"); // 로그인을 위해 추가 -세민-
 
   const GoHome = () => {
     navigate("/afterLogin");
@@ -366,7 +367,7 @@ const Page = ({ items, setItems }) => {
         마이페이지
         <Line></Line>
         <AboutLevel>행복한 농부, </AboutLevel>
-        <AboutName>정민지</AboutName>
+        <AboutName>{loggedInUserID}</AboutName>
         <AboutNim>님</AboutNim>
       </SmallTitle>
 
