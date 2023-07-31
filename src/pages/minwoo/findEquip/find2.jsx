@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 
 const Container = styled.div`
   width: 414px;
-  height: 736px;
+  height: 1300px;
 
   margin: 0px auto;
 
@@ -44,7 +44,7 @@ const Line = styled.div`
 
 const MiddleBox = styled.div`
   width: 350px;
-  height: 498px;
+  height: 580px;
 
   margin-left: 36px;
   margin-top: 20px;
@@ -75,8 +75,9 @@ const TopLevel = styled.div`
   font-weight: 300;
   line-height: normal;
 `;
+
+const loggedInUserID = localStorage.getItem("loggedInUserID");
 const MiddleTop = () => {
-  const loggedInUserID = localStorage.getItem("loggedInUserID"); // 로그인을 위해 추가 -세민-
   return (
     <div
       style={{
@@ -92,8 +93,14 @@ const MiddleTop = () => {
   );
 };
 const MiddleDate = styled.div`
-  background: #fff;
-  height: 15px;
+  padding-left: 238px;
+
+  color: #225a00;
+  font-family: Inter;
+  font-size: 13px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
 `;
 const MiddleWhite = styled.div`
   width: 301px;
@@ -109,6 +116,10 @@ const MiddleWhite = styled.div`
 `;
 
 const WhiteTitle = styled.span`
+  width: 230px;
+  overflow: hidden;
+  position: absolute;
+
   color: #3c3c3c;
   font-family: Inter;
   font-size: 14px;
@@ -150,6 +161,7 @@ const BottomBox = styled.div`
   width: 360px;
   height: 50px;
 
+  margin-top: -80px;
   padding-top: 25px;
   padding-left: 57px;
 `;
@@ -157,7 +169,7 @@ const BottomBtn = styled.button`
   width: 150px;
   height: 38px;
 
-  margin-left: 5px;
+  margin-left: 85px;
   padding-left: 20px;
   margin-top: -20px;
 
@@ -173,9 +185,78 @@ const BottomBtn = styled.button`
   line-height: 30px;
 `;
 
+const CommentCountBox = styled.div`
+  width: 414px;
+  height: 43px;
+
+  margin-top: 60px;
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+`;
+const CommentsBox = styled.div`
+  margin-top: 10px;
+  padding: 10px;
+  height: 340px;
+
+  overflow: auto;
+  position: relative;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+`;
+const Comment = styled.div`
+  padding: 10px;
+  padding-left: 30px;
+  padding-top: 18px;
+
+  width: 355px;
+  height: 93px;
+  flex-shrink: 0;
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+`;
+const CommentName = styled.div`
+  padding-bottom: 20px;
+  margin-top: -40px;
+  margin-left: 50px;
+
+  color: #000;
+  font-family: Inter;
+  font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`;
+
+const SendBox = styled.div`
+  background-color: #ffff22;
+  width: 380px;
+  height: 44px;
+  flex-shrink: 0;
+
+  margin-left: 20px;
+  margin-top: 20px;
+
+  background: #fff;
+  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
+`;
+const SendInput = styled.input`
+  width: 250px;
+  height: 26px;
+
+  position: absolute;
+  margin-left: 12px;
+  margin-top: 8px;
+
+  border: none;
+`;
+
 const Find2 = ({ item }) => {
   const navigate = useNavigate();
   const [imageSrc, setImageSrc] = useState("/images2/whiteHeart.png");
+  const [comments, setComments] = useState([]); // 댓글 목록 상태
+  const [newComment, setNewComment] = useState(""); // 새로운 댓글 입력값 상태
   // const [imageSrc, setImageSrc] = useState(() => {
   //   // 페이지를 불러올 때 localStorage에서 이미지 상태를 가져옴
   //   const savedImageSrc = localStorage.getItem("imageSrc");
@@ -191,6 +272,7 @@ const Find2 = ({ item }) => {
   const content = queryParams.get("content");
   const price = queryParams.get("price");
   const count = queryParams.get("count");
+  const date = queryParams.get("date");
 
   const image = queryParams.get("image");
   const imageUrl = image ? image : null;
@@ -199,6 +281,7 @@ const Find2 = ({ item }) => {
     // 이미지 상태가 바뀔 때마다 로컬 스토리지의 like 값을 업데이트
     const newLikeValue = imageSrc === "/images2/fillHeart.png";
     console.log(newLikeValue);
+    //댓글도 바뀔때마다 업데이트
 
     updateLocalStorage(newLikeValue);
   }, [imageSrc]);
@@ -222,6 +305,37 @@ const Find2 = ({ item }) => {
           newLikeValue ? "/images2/fillHeart.png" : "/images2/whiteHeart.png"
         );
       }
+    }
+  };
+
+  useEffect(() => {
+    const savedComments = JSON.parse(localStorage.getItem("comments"));
+    if (savedComments) {
+      setComments(savedComments);
+    }
+  }, []);
+
+  // 댓글 작성 버튼을 누르면 호출되는 함수
+  const handleCommentSubmit = () => {
+    // 댓글을 작성하고 해당 댓글을 댓글 목록에 추가
+    if (newComment.trim() !== "") {
+      const currentTime = new Date();
+
+      const newCommentObj = {
+        id: Date.now(), // 현재 시간을 이용한 임시 ID 생성
+        content: newComment,
+        time: currentTime.toLocaleString(),
+        replies: [],
+      };
+
+      setComments((prevComments) => [...prevComments, newCommentObj]);
+      setNewComment(""); // 댓글 입력값 초기화
+
+      // 로컬 스토리지에 댓글 목록 저장
+      localStorage.setItem(
+        "comments",
+        JSON.stringify([...comments, newCommentObj])
+      );
     }
   };
 
@@ -264,24 +378,25 @@ const Find2 = ({ item }) => {
 
       <MiddleBox>
         <MiddleTop />
-        <MiddleDate></MiddleDate>
+        <MiddleDate>{date}</MiddleDate>
         <MiddleWhite>
           <div>
             <WhiteTitle>{title}</WhiteTitle>
-            <img
-              src="/images2/seed.png"
-              style={{
-                marginLeft: "130px",
-                marginRight: "5px",
-              }}
-            />
-            {count}
+            <span style={{ position: "absolute", marginLeft: "240px" }}>
+              <img
+                src="/images2/seed.png"
+                style={{
+                  marginRight: "5px",
+                }}
+              />
+              {count}
+            </span>
           </div>
           {imageUrl && (
             <img
               src={imageUrl}
               alt="이미지"
-              style={{ height: "150px", marginLeft: "70px" }}
+              style={{ height: "150px", marginLeft: "70px", marginTop: "30px" }}
             />
           )}
           <WhiteContent>{content}</WhiteContent>
@@ -291,29 +406,93 @@ const Find2 = ({ item }) => {
       </MiddleBox>
 
       <BottomBox>
-        <BottomBtn>
-          <img
-            src="/images2/message.png"
-            style={{
-              position: "absolute",
-              marginTop: "8px",
-              marginLeft: "-23px",
-            }}
-          />
-          연락하기
-        </BottomBtn>
         <BottomBtn onClick={handleClick}>
           <img
             src={imageSrc}
             style={{
               position: "absolute",
               marginTop: "8px",
-              marginLeft: "-20px",
+              marginLeft: "-23px",
             }}
           />
           관심목록지정
         </BottomBtn>
       </BottomBox>
+
+      <CommentCountBox></CommentCountBox>
+      <CommentsBox>
+        {comments.map((comment) => (
+          <Comment key={comment.id}>
+            <img src="/images2/basic.png" />
+            <CommentName>
+              {loggedInUserID}
+              <span
+                style={{
+                  color: " #225A00",
+                  fontFamily: "Inter",
+                  fontSize: "10px",
+                  fontStyle: "normal",
+                  fontWeight: "300",
+                  lineHeight: "normal",
+                  marginLeft: "4px",
+                }}
+              >
+                행복한 농부
+              </span>
+            </CommentName>
+            <div>{comment.content}</div>
+            <div
+              style={{
+                color: "#737373",
+                fontFamily: "Inter",
+                fontSize: "13px",
+                fontStyle: "normal",
+                fontWeight: 300,
+                lineHeight: "normal",
+                marginTop: "6px",
+              }}
+            >
+              {comment.time}
+            </div>
+          </Comment>
+        ))}
+      </CommentsBox>
+      <SendBox>
+        <SendInput
+          type="text"
+          value={newComment}
+          onChange={(e) => setNewComment(e.target.value)}
+          placeholder="댓글을 입력해주세요"
+        ></SendInput>
+        <button
+          style={{
+            marginTop: "6px",
+            marginLeft: "278px",
+            border: "none",
+            background: "transparent",
+          }}
+        >
+          <img
+            src="/images2/lockWhite.png"
+            style={{ width: "24px", height: "24px" }}
+          />
+        </button>
+        <button
+          onClick={handleCommentSubmit}
+          style={{
+            // position: "absolute",
+            marginTop: "10px",
+            marginLeft: "8px",
+            border: "none",
+            background: "transparent",
+          }}
+        >
+          <img
+            src="/images2/send (2).png"
+            style={{ width: "28px", height: "28px" }}
+          />
+        </button>
+      </SendBox>
     </Container>
   );
 };
