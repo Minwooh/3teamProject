@@ -201,6 +201,7 @@ const Write = ({ items, setItems }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [price, setPrice] = useState("");
+  const [comments, setComments] = useState([]);
   //const [ITEMS, setITEMS] = useState([]);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
@@ -254,11 +255,10 @@ const Write = ({ items, setItems }) => {
   };
 
   const handleSave = () => {
-    // 저장 버튼이 클릭되었을 때 실행되는 로직
-    // 서버에 데이터를 전송하여 저장하는 코드를 여기에 작성합니다.
-    console.log("제목:", title);
-    console.log("내용:", content);
-    console.log("가격:", price);
+    const currentDate = new Date();
+    const year = currentDate.getFullYear(); // Get the current year (년)
+    const month = currentDate.getMonth() + 1; // Get the current month (월) (Note: Month is zero-based, so we add 1)
+    const day = currentDate.getDate();
 
     const newItem = {
       id: id,
@@ -268,6 +268,8 @@ const Write = ({ items, setItems }) => {
       like: false,
       count: 0,
       image: imgFile,
+      date: `${year}년 ${month}월 ${day}일`,
+      comments: comments,
     };
 
     setItems((prevItems) => [...prevItems, newItem]);

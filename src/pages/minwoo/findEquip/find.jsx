@@ -264,13 +264,6 @@ const FindPage = ({ items, setItems }) => {
   };
 
   const ListContent = ({ item }) => {
-    const [cnt, setCount] = useState(0);
-
-    // useEffect(() => {
-    //   // count 값이 변경될 때마다 localStorage에 저장합니다.
-    //   localStorage.setItem(`COUNT_${item.id}`, cnt);
-    // }, [cnt, item.id]);
-
     const GoFind2 = () => {
       // items 배열에서 아이템의 인덱스 찾기
       const itemIndex = items.findIndex((i) => i.id === item.id);
@@ -289,7 +282,8 @@ const FindPage = ({ items, setItems }) => {
         )}&price=${encodeURIComponent(item.price)}&id=${encodeURIComponent(
           item.id
         )}&count=${encodeURIComponent(item.count)}
-        &image=${encodeURIComponent(item.image)}`
+        &image=${encodeURIComponent(item.image)}
+        &date=${encodeURIComponent(item.date)}`
       );
     };
 
