@@ -6,6 +6,7 @@ import MyPage from "./pages/minwoo/myPage";
 import WritePage from "./pages/minwoo/findEquip/write";
 import FindPage from "./pages/minwoo/findEquip/find";
 import Find2 from "./pages/minwoo/findEquip/find2";
+import Chatt from "./pages/minwoo/chatting/chattPage";
 //pages/semin
 import Agreement from "./pages/semin/agreement";
 import Join from "./pages/semin/join";
@@ -51,6 +52,7 @@ const App = () => {
             path="/find2"
             element={<Find2 items={items} setItems={setItems} />}
           />
+          <Route path="/chatt" element={<Chatt />} />
           {/*세민쓰가 적은 경로*/}
           <Route path="/agreement" element={<Agreement />} />
           <Route path="/join" element={<Join />} />

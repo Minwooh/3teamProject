@@ -211,11 +211,13 @@ const Comment = styled.div`
   padding-top: 18px;
 
   width: 355px;
-  height: 93px;
+  word-wrap: break-word;
+
   flex-shrink: 0;
   background: #fff;
   box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.25);
 `;
+
 const CommentName = styled.div`
   padding-bottom: 20px;
   margin-top: -40px;
@@ -224,6 +226,22 @@ const CommentName = styled.div`
   color: #000;
   font-family: Inter;
   font-size: 17px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: normal;
+`;
+const ReComment = styled.button`
+  width: 47px;
+  height: 20px;
+
+  margin-left: 305px;
+
+  border: 1px solid #d6d6d6;
+  background: #fff;
+
+  color: #000;
+  font-family: Inter;
+  font-size: 11px;
   font-style: normal;
   font-weight: 600;
   line-height: normal;
@@ -250,6 +268,15 @@ const SendInput = styled.input`
   margin-top: 8px;
 
   border: none;
+
+  &::placeholder {
+    color: #a7a7a7;
+    font-family: Inter;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
 `;
 
 const Find2 = ({ item }) => {
@@ -257,11 +284,9 @@ const Find2 = ({ item }) => {
   const [imageSrc, setImageSrc] = useState("/images2/whiteHeart.png");
   const [comments, setComments] = useState([]); // 댓글 목록 상태
   const [newComment, setNewComment] = useState(""); // 새로운 댓글 입력값 상태
-  // const [imageSrc, setImageSrc] = useState(() => {
-  //   // 페이지를 불러올 때 localStorage에서 이미지 상태를 가져옴
-  //   const savedImageSrc = localStorage.getItem("imageSrc");
-  //   return savedImageSrc ? savedImageSrc : "/images2/whiteHeart.png";
-  // });
+
+  const [isSecret, setIsSecret] = useState(false); // 비밀댓글 여부를 나타내는 상태
+  const [isCommentVisible, setIsCommentVisible] = useState(true);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -322,11 +347,15 @@ const Find2 = ({ item }) => {
       const currentTime = new Date();
 
       const newCommentObj = {
-        id: Date.now(), // 현재 시간을 이용한 임시 ID 생성
+        id: comments.length + 1, // 현재 시간을 이용한 임시 ID 생성
         content: newComment,
         time: currentTime.toLocaleString(),
-        replies: [],
       };
+
+      // 새로운 댓글인 경우 isSecret 프로퍼티를 true로 설정
+      if (isSecret) {
+        newCommentObj.isSecret = true;
+      }
 
       setComments((prevComments) => [...prevComments, newCommentObj]);
       setNewComment(""); // 댓글 입력값 초기화
@@ -353,6 +382,10 @@ const Find2 = ({ item }) => {
 
   const GoMy = () => {
     navigate("/myPage");
+  };
+
+  const GoChatt = () => {
+    navigate("/chatt");
   };
 
   const Logout = () => {
@@ -423,37 +456,59 @@ const Find2 = ({ item }) => {
       <CommentsBox>
         {comments.map((comment) => (
           <Comment key={comment.id}>
-            <img src="/images2/basic.png" />
-            <CommentName>
-              {loggedInUserID}
-              <span
-                style={{
-                  color: " #225A00",
-                  fontFamily: "Inter",
-                  fontSize: "10px",
-                  fontStyle: "normal",
-                  fontWeight: "300",
-                  lineHeight: "normal",
-                  marginLeft: "4px",
-                }}
-              >
-                행복한 농부
-              </span>
-            </CommentName>
-            <div>{comment.content}</div>
-            <div
-              style={{
-                color: "#737373",
-                fontFamily: "Inter",
-                fontSize: "13px",
-                fontStyle: "normal",
-                fontWeight: 300,
-                lineHeight: "normal",
-                marginTop: "6px",
-              }}
-            >
-              {comment.time}
-            </div>
+            {comment.isSecret ? (
+              <div>
+                <div style={{ marginBottom: "6px" }}>비밀 댓글입니다</div>
+                <div
+                  style={{
+                    color: "#737373",
+                    fontFamily: "Inter",
+                    fontSize: "13px",
+                    fontStyle: "normal",
+                    fontWeight: 300,
+                    lineHeight: "normal",
+                  }}
+                >
+                  {comment.time}
+                </div>
+              </div>
+            ) : (
+              <div>
+                <img src="/images2/basic.png" alt="" />
+                <CommentName>
+                  {loggedInUserID}
+                  <span
+                    style={{
+                      color: "#225A00",
+                      fontFamily: "Inter",
+                      fontSize: "10px",
+                      fontStyle: "normal",
+                      fontWeight: "300",
+                      lineHeight: "normal",
+                      marginLeft: "4px",
+                    }}
+                  >
+                    행복한 농부
+                  </span>
+                </CommentName>
+                <div>{comment.content}</div>
+                <div
+                  style={{
+                    color: "#737373",
+                    fontFamily: "Inter",
+                    fontSize: "13px",
+                    fontStyle: "normal",
+                    fontWeight: 300,
+                    lineHeight: "normal",
+                    marginTop: "6px",
+                  }}
+                >
+                  {comment.time}
+                </div>
+              </div>
+            )}
+
+            <ReComment onClick={GoChatt}>채팅</ReComment>
           </Comment>
         ))}
       </CommentsBox>
@@ -464,7 +519,9 @@ const Find2 = ({ item }) => {
           onChange={(e) => setNewComment(e.target.value)}
           placeholder="댓글을 입력해주세요"
         ></SendInput>
+
         <button
+          onClick={() => setIsSecret((prev) => !prev)}
           style={{
             marginTop: "6px",
             marginLeft: "278px",
@@ -473,7 +530,7 @@ const Find2 = ({ item }) => {
           }}
         >
           <img
-            src="/images2/lockWhite.png"
+            src={isSecret ? "/images2/lockGreen.png" : "/images2/lockWhite.png"}
             style={{ width: "24px", height: "24px" }}
           />
         </button>
