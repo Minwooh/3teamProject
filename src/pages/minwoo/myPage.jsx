@@ -325,6 +325,10 @@ const Page = ({ items, setItems }) => {
   };
 
   const ListContent = ({ item, updateLikeStatus }) => {
+    const imageUrl = item.image ? item.image : "./images2/noImg.png";
+    const handleHeartClick = () => {
+      updateLikeStatus(item.id); // 하트를 클릭하면 이 함수가 호출됩니다.
+    };
     const GoFind2 = () => {
       navigate(
         `/find2?title=${encodeURIComponent(
@@ -340,11 +344,11 @@ const Page = ({ items, setItems }) => {
 
     return (
       <WhiteBox>
-        <HeartImg onClick={() => updateLikeStatus(item.id)}>
+        <HeartImg onClick={handleHeartClick}>
           <img src="./images2/heart.png" style={{ height: "10px" }} />
         </HeartImg>
         <div onClick={GoFind2}>
-          <LookImg src="./images2/basic.png"></LookImg>
+          <LookImg src={imageUrl}></LookImg>
           <ListTitle>{item.title}</ListTitle>
           <Preview>{item.content}</Preview>
         </div>
