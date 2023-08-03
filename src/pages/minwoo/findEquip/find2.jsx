@@ -284,9 +284,7 @@ const Find2 = ({ item }) => {
   const [imageSrc, setImageSrc] = useState("/images2/whiteHeart.png");
   const [comments, setComments] = useState([]); // 댓글 목록 상태
   const [newComment, setNewComment] = useState(""); // 새로운 댓글 입력값 상태
-
   const [isSecret, setIsSecret] = useState(false); // 비밀댓글 여부를 나타내는 상태
-  const [isCommentVisible, setIsCommentVisible] = useState(true);
 
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
@@ -302,11 +300,23 @@ const Find2 = ({ item }) => {
   const image = queryParams.get("image");
   const imageUrl = image ? image : null;
 
+  // 컴포넌트가 마운트될 때 로컬 스토리지에서 댓글 목록을 가져와서 설정
+  useEffect(() => {
+    const storedComments = JSON.parse(localStorage.getItem("ITEMS"));
+    if (storedComments) {
+      const itemIndex = storedComments.findIndex(
+        (storedItem) => storedItem.id === parseInt(id, 10)
+      );
+      if (itemIndex !== -1) {
+        setComments(storedComments[itemIndex].comments);
+      }
+    }
+  }, []);
+
   useEffect(() => {
     // 이미지 상태가 바뀔 때마다 로컬 스토리지의 like 값을 업데이트
     const newLikeValue = imageSrc === "/images2/fillHeart.png";
     console.log(newLikeValue);
-    //댓글도 바뀔때마다 업데이트
 
     updateLocalStorage(newLikeValue);
   }, [imageSrc]);
@@ -333,38 +343,36 @@ const Find2 = ({ item }) => {
     }
   };
 
-  useEffect(() => {
-    const savedComments = JSON.parse(localStorage.getItem("comments"));
-    if (savedComments) {
-      setComments(savedComments);
-    }
-  }, []);
-
   // 댓글 작성 버튼을 누르면 호출되는 함수
   const handleCommentSubmit = () => {
-    // 댓글을 작성하고 해당 댓글을 댓글 목록에 추가
     if (newComment.trim() !== "") {
       const currentTime = new Date();
 
       const newCommentObj = {
-        id: comments.length + 1, // 현재 시간을 이용한 임시 ID 생성
+        id: comments.length + 1,
         content: newComment,
         time: currentTime.toLocaleString(),
       };
 
-      // 새로운 댓글인 경우 isSecret 프로퍼티를 true로 설정
       if (isSecret) {
         newCommentObj.isSecret = true;
       }
+      setComments([...comments, newCommentObj]);
 
-      setComments((prevComments) => [...prevComments, newCommentObj]);
-      setNewComment(""); // 댓글 입력값 초기화
+      // 댓글 입력값 초기화
+      setNewComment("");
 
       // 로컬 스토리지에 댓글 목록 저장
-      localStorage.setItem(
-        "comments",
-        JSON.stringify([...comments, newCommentObj])
-      );
+      // const savedComments = JSON.parse(localStorage.getItem("comments")) || [];
+      // const updatedComments = [...savedComments, newCommentObj];
+      // localStorage.setItem("comments", JSON.stringify(updatedComments));
+      const items = JSON.parse(localStorage.getItem("ITEMS")) || [];
+      const itemIndex = items.findIndex((item) => item.id === parseInt(id, 10));
+      if (itemIndex !== -1) {
+        const updatedItems = [...items];
+        updatedItems[itemIndex].comments.push(newCommentObj);
+        localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
+      }
     }
   };
 
@@ -531,15 +539,20 @@ const Find2 = ({ item }) => {
         >
           <img
             src={isSecret ? "/images2/lockGreen.png" : "/images2/lockWhite.png"}
-            style={{ width: "24px", height: "24px" }}
+            style={{
+              position: "absolute",
+              width: "24px",
+              height: "24px",
+              marginTop: "-26px",
+            }}
           />
         </button>
         <button
           onClick={handleCommentSubmit}
           style={{
             // position: "absolute",
-            marginTop: "10px",
-            marginLeft: "8px",
+            marginTop: "8px",
+            marginLeft: "38px",
             border: "none",
             background: "transparent",
           }}
