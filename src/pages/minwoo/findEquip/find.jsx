@@ -263,11 +263,42 @@ const FindPage = ({ items, setItems }) => {
     );
   };
 
+  // 셀렉트 박스에서 정렬 옵션을 선택할 때 호출되는 함수
+  const handleSortChange = (e) => {
+    const value = e.target.value;
+    let sortedItems = [...items];
+
+    switch (value) {
+      case "new":
+        sortedItems = [...items].sort((a, b) => {
+          return b.id - a.id; // 최신순으로 정렬
+        });
+        break;
+      case "name":
+        sortedItems = [...items].sort((a, b) => {
+          return a.title.localeCompare(b.title); // 이름순으로 정렬
+        });
+        break;
+      case "old":
+        sortedItems = [...items].sort((a, b) => {
+          return a.id - b.id; // 오래된순으로 정렬
+        });
+        break;
+      default:
+        break;
+    }
+
+    setItems(sortedItems);
+  };
+
   const ListContent = ({ item }) => {
+    const imageUrl = item.image ? item.image : "./images2/noImg.png";
+
     const GoFind2 = () => {
       // items 배열에서 아이템의 인덱스 찾기
       const itemIndex = items.findIndex((i) => i.id === item.id);
       // 특정 아이템의 카운트 업데이트
+
       const updatedItems = [...items];
       updatedItems[itemIndex] = { ...item, count: item.count + 1 };
       // 업데이트된 items 배열을 상태와 localStorage에 저장
@@ -289,7 +320,7 @@ const FindPage = ({ items, setItems }) => {
 
     return (
       <WhiteBox key={item.id} onClick={GoFind2}>
-        <LookImg src="./images2/basic.png"></LookImg>
+        <LookImg src={imageUrl}></LookImg>
         <Title>{item.title}</Title>
         <Preview>{item.content}</Preview>
         <SeedImg>
@@ -337,7 +368,11 @@ const FindPage = ({ items, setItems }) => {
       <ConditionBox>
         {" "}
         정렬조건
-        <select name="choice" style={{ marginLeft: "10px", width: "110px" }}>
+        <select
+          name="choice"
+          style={{ marginLeft: "10px", width: "110px" }}
+          onChange={handleSortChange}
+        >
           <option value="new">최신 등록순</option>
           <option value="name">이름순</option>
           <option value="old">오래된순</option>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-// import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
 const Container = styled.div`
   width: 414px;
@@ -129,40 +128,57 @@ const InputContent = styled.textarea`
 
   resize: none;
 `;
-const AddBox = styled.div`
-  width: 30px;
-  height: 30px;
-
-  margin-left: 300px;
-  margin-top: -45px;
-
-  padding-left: 8px;
-  padding-top: 10px;
-
-  background-color: rgba(53, 135, 0, 0.31);
-  border-radius: 40px;
-  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
-`;
-const DropdownMenu = styled.ul`
-  height: 23px;
+const LabelDiv = styled.div`
   position: absolute;
-  bottom: 100%;
+
+  top: 50px;
   left: 0;
 
-  padding: 0px;
+  width: 33px;
+  height: 33px;
+
+  padding-left: 10px;
+  padding-top: 10px;
+
+  border-radius: 38px;
+
+  background: rgba(53, 135, 0, 0.31);
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
+`;
+const AddBox = styled.div`
+  position: relative;
+
+  margin-left: 290px;
+  margin-top: -100px;
+
+  width: 30px;
+  height: 80px;
+
+  border-radius: 38px;
+
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
 `;
 
-const DropdownItem = styled.li`
-  width: 30px;
-  height: 30px;
+const AddLink = styled.button`
+  position: absolute;
 
-  list-style-type: none;
-  cursor: pointer;
-  padding: 4px;
+  top: 15px;
+  left: 0;
 
-  border-radius: 40px;
-  background-color: rgba(53, 135, 0, 0.31);
-  box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.4);
+  width: 45px;
+  height: 45px;
+
+  margin-left: 0px;
+  margin-top: -30px;
+
+  padding-left: 8px;
+  padding-top: 8px;
+
+  border-radius: 30px;
+  border: none;
+
+  background: rgba(53, 135, 0, 0.31);
+  filter: drop-shadow(0px 0px 4px rgba(0, 0, 0, 0.25));
 `;
 
 const PriceBox = styled.div`
@@ -175,6 +191,7 @@ const AddPrice = styled.input`
 
   border: none;
   margin-left: 5px;
+  margin-top: 15px;
 
   background: #efefef;
 `;
@@ -202,10 +219,25 @@ const Write = ({ items, setItems }) => {
   const [content, setContent] = useState("");
   const [price, setPrice] = useState("");
   const [comments, setComments] = useState([]);
-  //const [ITEMS, setITEMS] = useState([]);
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [imgFile, setImgFile] = useState([]); // 이미지 배열
+  const [doValue, setDoValue] = useState("new");
+  const [dongValue, setDongValue] = useState("new");
 
+  const [isLinkButtonVisible, setLinkButtonVisible] = useState(false);
+
+  const handleMouseEnter = () => {
+    setLinkButtonVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setLinkButtonVisible(false);
+  };
+
+  const handleLinkButtonClick = (e) => {
+    e.stopPropagation(); // 클릭 이벤트가 상위 요소로 전파되는 것을 막음
+    // 여기서 링크 버튼 클릭 시 원하는 동작을 수행할 수 있습니다.
+    console.log("링크 버튼이 클릭되었습니다.");
+  };
   const upload = useRef();
 
   const imgUpload = () => {
@@ -242,9 +274,10 @@ const Write = ({ items, setItems }) => {
     navigate("/home");
   };
 
-  const GoInput = () => {
-    navigate("/imgInput");
+  const GoHome = () => {
+    navigate("/afterLogin");
   };
+
   const Top = () => {
     return (
       <TopBox>
@@ -267,9 +300,13 @@ const Write = ({ items, setItems }) => {
       price: price,
       like: false,
       count: 0,
-      image: imgFile,
+
+      image: imgFile.length > 0 ? imgFile : ["./images2/noImg.png"],
       date: `${year}년 ${month}월 ${day}일`,
       comments: comments,
+
+      do: doValue, // 선택한 시/도 값 추가
+      dong: dongValue, // 선택한 시/군/구 값 추가
     };
 
     setItems((prevItems) => [...prevItems, newItem]);
@@ -285,19 +322,24 @@ const Write = ({ items, setItems }) => {
     navigate("/find");
   };
 
-  const handleMouseEnter = () => {
-    setIsDropdownOpen(true);
-  };
+  // price를 정수로 변환하는 함수
+  const handlePriceChange = (e) => {
+    const value = e.target.value;
+    const intValue = parseInt(value, 10); // 10진수로 변환
 
-  const handleMouseLeave = () => {
-    setIsDropdownOpen(false);
+    if (isNaN(intValue) || intValue < 0) {
+      alert("올바른 가격을 입력해주세요.");
+      return;
+    }
+
+    setPrice(intValue);
   };
 
   return (
     <Container>
       <Top />
       <TitleBox>
-        <img src="/images2/title.png" alt="있농" />
+        <img src="/images2/title.png" alt="있농" onClick={GoHome} />
         <Line></Line>
       </TitleBox>
 
@@ -318,8 +360,11 @@ const Write = ({ items, setItems }) => {
                 height: "20px",
                 background: "#efefef",
               }}
+              value={doValue}
+              onChange={(e) => setDoValue(e.target.value)}
             >
               <option value="new">시/도</option>
+              <option value="do1">고양시</option>
             </select>
           </ConditionDo>
           <ConditionDong>
@@ -331,8 +376,11 @@ const Write = ({ items, setItems }) => {
                 height: "20px",
                 background: "#efefef",
               }}
+              value={dongValue}
+              onChange={(e) => setDongValue(e.target.value)}
             >
               <option value="new">시/도</option>
+              <option value="dong1">일산서구</option>
             </select>
           </ConditionDong>
         </ConditionBox>
@@ -361,9 +409,11 @@ const Write = ({ items, setItems }) => {
         </TextBox>
 
         <AddBox onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-          <label for="uplaoad_img">
-            <img src="/images2/img.png" alt="사진첨부" />
-          </label>
+          <LabelDiv>
+            <label for="uplaoad_img">
+              <img src="/images2/img.png" alt="사진첨부" />
+            </label>
+          </LabelDiv>
           <input
             id="uplaoad_img"
             type="file"
@@ -371,26 +421,26 @@ const Write = ({ items, setItems }) => {
             multiple
             onChange={imgUpload}
             accept="image/*"
+            className="custom-input-style"
             style={{
               display: "none",
               cursor: "pointer",
             }}
           />
-          {/* {isDropdownOpen && (
-            <DropdownMenu>
-              <DropdownItem>
-                <img src="/images2/link.png" alt="링크첨부" />
-              </DropdownItem> */}
-          {/* <DropdownItem></DropdownItem> */}
-          {/* </DropdownMenu> */}
-          {/* )}  */}
+
+          {isLinkButtonVisible && (
+            <AddLink className="add-link-btn" onClick={handleLinkButtonClick}>
+              <img src="/images2/link.png" />
+            </AddLink>
+          )}
         </AddBox>
 
         <PriceBox>
           가격
           <AddPrice
             value={price}
-            onChange={(e) => setPrice(e.target.value)}
+            // onChange={(e) => setPrice(e.target.value)}
+            onChange={handlePriceChange}
           ></AddPrice>
         </PriceBox>
       </ContentBox>

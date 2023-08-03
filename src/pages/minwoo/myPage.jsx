@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom/dist";
@@ -296,7 +296,7 @@ const Page = ({ items, setItems }) => {
     }
   }, [setItems]);
 
-  const DisplayItems = ({ item }) => {
+  const DisplayItems = ({ item, index }) => {
     return (
       <div
         style={{
@@ -306,7 +306,7 @@ const Page = ({ items, setItems }) => {
           height: "18px",
         }}
       >
-        {item.id++}.<Title>{item.title}</Title>
+        {index + 1}.<Title>{item.title}</Title>
       </div>
     );
   };
@@ -380,8 +380,8 @@ const Page = ({ items, setItems }) => {
           {/* 농기구랑 토지 페이지에서 받은 데이터 구분 필요!! 배열 이름 다르게 하기 */}
           농기구
           <NongArea>
-            {items.map((item) => (
-              <DisplayItems key={item.id} item={item} />
+            {items.map((item, index) => (
+              <DisplayItems key={item.id} item={item} index={index} />
             ))}
           </NongArea>
           토지
