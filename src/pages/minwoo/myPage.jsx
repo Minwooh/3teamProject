@@ -30,21 +30,6 @@ const Button = styled.button`
   text-decoration-line: underline;
 `;
 
-const Top = () => {
-  const navigate = useNavigate();
-
-  const Logout = () => {
-    navigate("/home");
-  };
-
-  return (
-    <TopBox>
-      <Button onClick={Logout}>로그아웃</Button>
-      <Button>마이페이지</Button>
-    </TopBox>
-  );
-};
-
 const TitleBox = styled.div`
   margin-top: 15px;
   padding-left: 80px;
@@ -287,6 +272,23 @@ const Page = ({ items, setItems }) => {
 
   const GoHome = () => {
     navigate("/afterLogin");
+  };
+
+  const GoMy = () => {
+    navigate("/myPage");
+  };
+
+  const Logout = () => {
+    navigate("/");
+  };
+
+  const Top = () => {
+    return (
+      <TopBox>
+        <Button onClick={Logout}>로그아웃</Button>
+        <Button onClick={GoMy}>마이페이지</Button>
+      </TopBox>
+    );
   };
 
   useEffect(() => {
