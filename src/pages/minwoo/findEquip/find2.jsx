@@ -624,7 +624,6 @@ const Find2 = ({ item }) => {
         <button
           onClick={handleCommentSubmit}
           style={{
-            // position: "absolute",
             marginTop: "8px",
             marginLeft: "38px",
             border: "none",
