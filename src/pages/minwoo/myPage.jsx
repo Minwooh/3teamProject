@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom/dist";
@@ -29,21 +29,6 @@ const Button = styled.button`
   line-height: normal;
   text-decoration-line: underline;
 `;
-
-const Top = () => {
-  const navigate = useNavigate();
-
-  const Logout = () => {
-    navigate("/home");
-  };
-
-  return (
-    <TopBox>
-      <Button onClick={Logout}>로그아웃</Button>
-      <Button>마이페이지</Button>
-    </TopBox>
-  );
-};
 
 const TitleBox = styled.div`
   margin-top: 15px;
@@ -204,14 +189,30 @@ const Title = styled.div`
 `;
 const ListTitle = styled.div`
   display: inlin-box;
+
+  height: 20px;
+  width: 200px;
+
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  position: relative;
+
   margin-top: -50px;
   margin-left: 80px;
 `;
 
 const Preview = styled.div`
   position: relative;
+
   height: 20px;
   width: 200px;
+
+  white-space: no-wrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
   margin-left: 80px;
 `;
 const SeedImg = styled.div`
@@ -267,9 +268,27 @@ const LandArea = styled.div`
 
 const Page = ({ items, setItems }) => {
   const navigate = useNavigate();
+  const loggedInUserID = localStorage.getItem("loggedInUserID"); // 로그인을 위해 추가 -세민-
 
   const GoHome = () => {
     navigate("/afterLogin");
+  };
+
+  const GoMy = () => {
+    navigate("/myPage");
+  };
+
+  const Logout = () => {
+    navigate("/");
+  };
+
+  const Top = () => {
+    return (
+      <TopBox>
+        <Button onClick={Logout}>로그아웃</Button>
+        <Button onClick={GoMy}>마이페이지</Button>
+      </TopBox>
+    );
   };
 
   useEffect(() => {
@@ -279,7 +298,7 @@ const Page = ({ items, setItems }) => {
     }
   }, [setItems]);
 
-  const DisplayItems = ({ item }) => {
+  const DisplayItems = ({ item, index }) => {
     return (
       <div
         style={{
@@ -289,24 +308,56 @@ const Page = ({ items, setItems }) => {
           height: "18px",
         }}
       >
-        {item.id++}.<Title>{item.title}</Title>
+        {index + 1}.<Title>{item.title}</Title>
       </div>
     );
   };
 
-  const ListContent = ({ item }) => {
+  const getLikedItems = () => {
+    return items.filter((item) => item.like === true);
+  };
+
+  const updateLikeStatus = (id) => {
+    const updatedItems = items.map((item) =>
+      item.id === id ? { ...item, like: !item.like } : item
+    );
+
+    setItems(updatedItems);
+    localStorage.setItem("ITEMS", JSON.stringify(updatedItems));
+  };
+
+  const ListContent = ({ item, updateLikeStatus }) => {
+    const imageUrl = item.image ? item.image : "./images2/noImg.png";
+    const handleHeartClick = () => {
+      updateLikeStatus(item.id); // 하트를 클릭하면 이 함수가 호출됩니다.
+    };
+    const GoFind2 = () => {
+      navigate(
+        `/find2?title=${encodeURIComponent(
+          item.title
+        )}&content=${encodeURIComponent(
+          item.content
+        )}&price=${encodeURIComponent(item.price)}&id=${encodeURIComponent(
+          item.id
+        )}&count=${encodeURIComponent(item.count)}
+        &image=${encodeURIComponent(item.image)}`
+      );
+    };
+
     return (
       <WhiteBox>
-        <HeartImg>
+        <HeartImg onClick={handleHeartClick}>
           <img src="./images2/heart.png" style={{ height: "10px" }} />
         </HeartImg>
-        <LookImg src="./images2/basic.png"></LookImg>
-        <ListTitle>{item.title}</ListTitle>
-        <Preview>{item.content}</Preview>
+        <div onClick={GoFind2}>
+          <LookImg src={imageUrl}></LookImg>
+          <ListTitle>{item.title}</ListTitle>
+          <Preview>{item.content}</Preview>
+        </div>
         <SeedImg>
           <img src="./images2/seed.png" />
         </SeedImg>
-        <ClickCount>4300</ClickCount>
+        <ClickCount>{item.price}</ClickCount>
       </WhiteBox>
     );
   };
@@ -322,7 +373,7 @@ const Page = ({ items, setItems }) => {
         마이페이지
         <Line></Line>
         <AboutLevel>행복한 농부, </AboutLevel>
-        <AboutName>정민지</AboutName>
+        <AboutName>{loggedInUserID}</AboutName>
         <AboutNim>님</AboutNim>
       </SmallTitle>
 
@@ -335,8 +386,8 @@ const Page = ({ items, setItems }) => {
           {/* 농기구랑 토지 페이지에서 받은 데이터 구분 필요!! 배열 이름 다르게 하기 */}
           농기구
           <NongArea>
-            {items.map((item) => (
-              <DisplayItems key={item.id} item={item} />
+            {items.map((item, index) => (
+              <DisplayItems key={item.id} item={item} index={index} />
             ))}
           </NongArea>
           토지
@@ -350,8 +401,12 @@ const Page = ({ items, setItems }) => {
           관심목록
         </ListText>
         <ListBox>
-          {items.map((item) => (
-            <ListContent key={item.id} item={item} />
+          {getLikedItems().map((item) => (
+            <ListContent
+              key={item.id}
+              item={item}
+              updateLikeStatus={updateLikeStatus}
+            />
           ))}
         </ListBox>
       </LikeBox>
